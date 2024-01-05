@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,4 +35,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('deneme', function() {
         return ("hello this is testing for auth system is working.");
     });
+});
+
+
+Route::get('product', [ProductController::class, 'index']);
+Route::post('product', [ProductController::class, 'store']);
+Route::get('/token', function () {
+    return csrf_token();
 });
