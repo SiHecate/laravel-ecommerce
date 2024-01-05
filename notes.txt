@@ -1,0 +1,25 @@
+- Bu txt dosyası projeyle alakalı notların olduğu kısım -
+
+Trendyol üzerinden bir ürünü satın alırken kullanıcı tarafına gösterilen özellikler
+    - Ürün başlığı
+    - Ürün açıklaması
+    - Ürün tedarikçisi
+    - Ürün fotoğrafı
+    - Ürün fiyatı
+    - Ürün tagleri
+        - Kadın, Erkek
+        - Aksesuar
+        - Elektronik
+        ya da buna benzer başlıklar. Her etiket başlığının kendisine ait özellikleri var (başlangıç için sadece etkiket almak yeterli gibi.)
+    - Ürün yorumları (?)
+
+Gereken Table Structure'ları
+    - Id
+    - Title
+    - Desc
+    - Photo
+    - Price
+    - Tag
+    - İlerisi için yorumlar için gereken key
+
+

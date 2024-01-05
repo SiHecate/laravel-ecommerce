@@ -18,6 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Eğer kullanıcı giriş yaptıysa bu route'a erişebiliyor olması gerekiyor
+// kullanıcı giriş yapmadıysa bu 401 döndürmesi gerekiyor.
 
 Route::middleware(['auth'])->group(function () {
     Route::get('deneme', function() {
