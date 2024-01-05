@@ -29,3 +29,9 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('deneme', function() {
+        return ("hello this is testing for auth system is working.");
+    });
+});
