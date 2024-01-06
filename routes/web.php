@@ -37,9 +37,17 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+Route::prefix('product')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::post('/', [ProductController::class, 'store']);
+    Route::get('{id}', [ProductController::class, 'show']);
+    Route::put('{id}', [ProductController::class, 'update']);
+    Route::delete('{id}', [ProductController::class, 'destroy']);
 
-Route::get('product', [ProductController::class, 'index']);
-Route::post('product', [ProductController::class, 'store']);
+
+});
+
+
 Route::get('/token', function () {
     return csrf_token();
 });
