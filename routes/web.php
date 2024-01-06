@@ -31,10 +31,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::prefix('product')->middleware('api')->group(function () {
+Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
     Route::post('/add', [ProductController::class, 'store']);
+    Route::get('/tags', [ProductController::class, 'tags']);
     Route::get('{id}', [ProductController::class, 'show']);
     Route::put('{id}', [ProductController::class, 'update']);
     Route::delete('{id}', [ProductController::class, 'destroy']);
+});
+
+
+Route::get('/token', function () {
+    return csrf_token();
 });

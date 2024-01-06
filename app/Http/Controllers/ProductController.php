@@ -31,6 +31,19 @@ class ProductController extends Controller
         return response()->json(['products' => $products], 200);
     }
 
+    public function tags()
+    {
+        try {
+            $tags = Product::pluck('tag');
+
+            return response()->json(['tags' => $tags], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error retrieving tags', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
+
     /**
      * Store a newly created resource in storage.
      */
