@@ -23,7 +23,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -31,23 +31,10 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('deneme', function() {
-        return ("hello this is testing for auth system is working.");
-    });
-});
-
-Route::prefix('product')->group(function () {
+Route::prefix('product')->middleware('api')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
-    Route::post('/', [ProductController::class, 'store']);
+    Route::post('/add', [ProductController::class, 'store']);
     Route::get('{id}', [ProductController::class, 'show']);
     Route::put('{id}', [ProductController::class, 'update']);
     Route::delete('{id}', [ProductController::class, 'destroy']);
-
-
-});
-
-
-Route::get('/token', function () {
-    return csrf_token();
 });

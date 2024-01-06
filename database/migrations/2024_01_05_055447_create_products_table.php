@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->decimal('price', 10, 2);
+            $table->decimal('stock');
+            $table->boolean('visibility');
             $table->string('tag', 40);
             $table->timestamps();
         });
