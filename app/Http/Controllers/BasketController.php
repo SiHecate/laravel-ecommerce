@@ -17,7 +17,6 @@ class BasketController extends Controller
     protected function validationRules()
     {
         return [
-            'user_id' => ['required', 'numeric'],
             'product_id' => ['required','numeric',]
         ];
     }
@@ -32,8 +31,9 @@ class BasketController extends Controller
     {
         $request->validate($this->validationRules());
 
-        $user_id = $request->input('user_id');
         $product_id = $request->input('product_id');
+
+        $user_id = $request->user()->id;
 
         $basket = Basket::where('user_id', $user_id)->first();
 
@@ -53,5 +53,42 @@ class BasketController extends Controller
 
         return response()->json(['message' => 'Product added to basket successfully', 'basket' => $basket], 201);
     }
+
+    public function update(Request $request, $product_id)
+    {}
+
+    public function destroy($product_id, Request $request)
+    {
+        $user_id = $request->user()->id;
+        $basket = Basket::where('user_id', $user_id)->first();
+
+        if ($basket) {
+            // Check if the product exists in the basket
+            if (in_array($product_id, json_decode($basket->products, true))) {
+                $products = json_decode($basket->products, true);
+
+                // Remove the product with the given id from the array
+                $newProducts = array_filter($products, function ($value) use ($product_id) {
+                    return $value != $product_id;
+                });
+
+                $basket->update(['products' => json_encode(array_values($newProducts))]); // Encode back to JSON
+
+                return response()->json([
+                    'message' => 'Product removed from the basket',
+                    'basket' => $basket,
+                    'user_id' => $user_id,
+                    'deleted_product_id' => $product_id,
+                ], 200);
+            } else {
+                return response()->json(['message' => 'Product not found in basket', 'product_id' => $product_id], 404);
+            }
+        } else {
+            return response()->json(['message' => 'Basket not found', 'user_id' => $user_id], 404);
+        }
+    }
+
+
+
 
 }

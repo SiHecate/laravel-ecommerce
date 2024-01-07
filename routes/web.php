@@ -44,8 +44,8 @@ Route::prefix('product')->group(function () {
 Route::prefix('basket')->group(function () {
     Route::get('/',[BasketController::class, 'index']);
     Route::post('/add', [BasketController::class, 'store']);
+    Route::delete('{id}', [BasketController::class, 'destroy']);
 });
-
 
 Route::get('/token', function () {
     return csrf_token();
