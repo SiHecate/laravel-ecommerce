@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,11 @@ Route::prefix('product')->group(function () {
     Route::get('{id}', [ProductController::class, 'show']);
     Route::put('{id}', [ProductController::class, 'update']);
     Route::delete('{id}', [ProductController::class, 'destroy']);
+});
+
+Route::prefix('basket')->group(function () {
+    Route::get('/',[BasketController::class, 'index']);
+    Route::post('/add', [BasketController::class, 'store']);
 });
 
 
