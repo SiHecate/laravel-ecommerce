@@ -44,8 +44,9 @@ Route::prefix('product')->group(function () {
 Route::prefix('basket')->group(function () {
     Route::get('/',[BasketController::class, 'index']);
     Route::post('/add', [BasketController::class, 'store']);
-    Route::delete('{id}', [BasketController::class, 'destroy']);
     Route::put('{id}/{type}', [BasketController::class, 'update']);
+    Route::delete('{id}', [BasketController::class, 'destroy']);
+    Route::get('/sepet', [BasketController::class, 'view']);
 });
 
 Route::get('/token', function () {

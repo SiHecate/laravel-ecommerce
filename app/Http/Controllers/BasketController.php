@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Basket;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
 
@@ -88,9 +89,6 @@ class BasketController extends Controller
         }
     }
 
-
-
-
     public function destroy($product_id, Request $request)
     {
         $user_id = $request->user()->id;
@@ -120,7 +118,32 @@ class BasketController extends Controller
         }
     }
 
+    public function view(Request $request)
+    {
+        /*
+            ToDo:
+                Ürün bilgilerine toplam fiyat ekle (ürün_fiyati*ürün_adeti) olarak
+                Ürünlerin bilgilerini al (resim, isim, kodu, adet, birim fiyatı, toplam tutarı)
+                    - Resim
+                    - İsim
+                    - Kod
+                    - Adet
+                    - Birim fiyat
+                    - Toplam tutar
+                Sepet boşsa sepet boş uyarısı
+                Falan filan. xD
+        */
 
+        $user_id = $request->user()->id;
+
+
+        $basket = Basket::where('user_id', $user_id)->first(); // buradan sepetteki ürünlerin listesini al
+        $product = Product::all(); // buradan sepetteki ürünlerin bilgilerini al
+
+
+
+        return response()->json(['basket' => $basket], 200);
+    }
 
 
 }
