@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-
     protected function validationRules()
     {
         return [
@@ -36,7 +35,9 @@ class ProductController extends Controller
         try {
             $tags = Product::pluck('tag');
 
-            return response()->json(['tags' => $tags], 200);
+            $uniqueTag = $tags->unique();
+
+            return response()->json(['tags' => $uniqueTag], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error retrieving tags', 'error' => $e->getMessage()], 500);
         }
