@@ -35,7 +35,14 @@ class BasketController extends Controller
 
         $product_id = $request->input('product_id');
 
-        $user_id = $request->user()->id;
+        $user = $request->user();
+
+        if ($user) {
+            $user_id = $user->id;
+        } else {
+            // Handle the case when there is no authenticated user
+            return response()->json(['message' => 'User not authenticated'], 401);
+        }
 
         $basket = Basket::where('user_id', $user_id)->first();
 
@@ -89,6 +96,27 @@ class BasketController extends Controller
         }
     }
 
+
+    public function deleted_products($product_id, $user_id) {
+        try {
+            $basket = Basket::where('user_id', $user_id)->first();
+
+            if ($basket) {
+                $deletedProducts = json_decode($basket->deleted_products, true) ?? [];
+                $deletedProducts[] = $product_id;
+
+                // Add these debug statements
+                error_log('Basket before update: ' . json_encode($basket));
+                error_log('Deleted products before update: ' . json_encode($deletedProducts));
+
+                $basket->update(['deleted_products' => json_encode($deletedProducts)]);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
     public function destroy($product_id, Request $request)
     {
         $user_id = $request->user()->id;
@@ -103,6 +131,8 @@ class BasketController extends Controller
                 });
 
                 $basket->update(['products' => json_encode(array_values($deletableProduct))]);
+
+                $this-> deleted_products($product_id, $user_id);
 
                 return response()->json([
                     'message' => 'Product removed from the basket',

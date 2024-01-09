@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->json('products')->nullable();
+            $table->json('deleted_products')->nullable();
             $table->timestamps();
         });
     }
