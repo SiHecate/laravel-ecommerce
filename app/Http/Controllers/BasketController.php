@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
 
 class BasketController extends Controller
 {
+
     /*
         ToDo:
             Her kullanıcının kendisine ait bir Cart'ı olabilir (belongs to)
@@ -40,7 +41,6 @@ class BasketController extends Controller
         if ($user) {
             $user_id = $user->id;
         } else {
-            // Handle the case when there is no authenticated user
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
@@ -105,7 +105,6 @@ class BasketController extends Controller
                 $deletedProducts = json_decode($basket->deleted_products, true) ?? [];
                 $deletedProducts[] = $product_id;
 
-                // Add these debug statements
                 error_log('Basket before update: ' . json_encode($basket));
                 error_log('Deleted products before update: ' . json_encode($deletedProducts));
 
@@ -148,32 +147,60 @@ class BasketController extends Controller
         }
     }
 
+/*
+m
+            - Adet
+            - Birim fiyat
+            - Toplam tutar
+        Sepet boşsa sepet boş uyarısı
+        Falan filan. xD
+*/
+
+/*
+    ToDo2:
+        Database içerisindeki array'deki her item için bilgi döndürülmesi gerekiyor.
+        Gelen her bilgi front tarafında gösterielecek.
+        İlk ToDov1'i hallet
+*/
+
     public function view(Request $request)
     {
-        /*
-            ToDo:
-                Ürün bilgilerine toplam fiyat ekle (ürün_fiyati*ürün_adeti) olarak
-                Ürünlerin bilgilerini al (resim, isim, kodu, adet, birim fiyatı, toplam tutarı)
-                    - Resim
-                    - İsim
-                    - Kod
-                    - Adet
-                    - Birim fiyat
-                    - Toplam tutar
-                Sepet boşsa sepet boş uyarısı
-                Falan filan. xD
-        */
-
         $user_id = $request->user()->id;
 
+        $basket = Basket::where('user_id', $user_id)->first();
+        $products = json_decode($basket->products, true) ?? [];
 
-        $basket = Basket::where('user_id', $user_id)->first(); // buradan sepetteki ürünlerin listesini al
-        $product = Product::all(); // buradan sepetteki ürünlerin bilgilerini al
+        $productDetails = [];
+        $productQuantity = [];
 
+        foreach ($products as $product_id)
+        {
 
+            $product = Product::find($product_id);
 
-        return response()->json(['basket' => $basket], 200);
+            $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
+
+            if ($product)
+            {
+                if (!isset($productDetails[$product->id]))
+                {
+                    $productDetails[$product->id] = [
+                        'product_code' => $product->id,
+                        'product_name' => $product->title,
+                        'product_image' => $product->image,
+                        'product_description' => $product->description,
+                        'product_price' => $product->price,
+                        'product_quantity' => $productQuantity[$product_id],
+                        'product_total_price' => $product->price * $productQuantity[$product_id],
+                    ];
+                }
+                else
+                {
+                    $productDetails[$product->id]['product_quantity'] = $productQuantity[$product_id];
+                    $productDetails[$product->id]['product_total_price'] += $product->price;
+                }
+            }
+        }
+        return response()->json(['products in basket' => array_values($productDetails),'current basket' => $basket, 'product quantitys' => $productQuantity], 200);
     }
-
-
 }
