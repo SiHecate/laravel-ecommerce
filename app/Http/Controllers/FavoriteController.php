@@ -27,13 +27,13 @@ class FavoriteController extends Controller
 
         $product_id = $request->input('product_id');
 
-        $user = $request->User();
+        $user = $request->user();
 
-        if ($user) {
-            $user_id = $user->id;
-        } else {
+        if (!$user) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
+
+        $user_id = $user->id;
 
         $favorite = Favorite::where('user_id', $user_id)->first();
 
@@ -43,15 +43,17 @@ class FavoriteController extends Controller
                 'products' => json_encode([$product_id]),
             ]);
         } else {
-            $favoriteProducts = json_encode($favorite->products, true) ?? [];
+            $favoriteProducts = json_decode($favorite->products, true) ?? [];
             $favoriteProducts[] = $product_id;
 
             $favorite->update([
                 'products' => json_encode($favoriteProducts),
             ]);
         }
+
         return response()->json(['message' => 'Product added to basket successfully', 'basket' => $favorite], 201);
     }
+
 
     public function update(Request $request, $product_id, $type){
         // Favorite page'de ihtiyacı olmadığını düşünüyorum şu an için
@@ -66,7 +68,7 @@ class FavoriteController extends Controller
             $favorite = Favorite::Where('user_id', $user_id)->first();
 
             if ($favorite) {
-                $deletedProducts = json_encode($favorite->deleted_product, true) ?? [];
+                $deletedProducts[] = json_encode($favorite->deleted_product, true) ?? [];
                 $deletedProducts[] = $product_id;
 
                 error_log('Basket before update: ' . json_encode($favorite));
@@ -82,19 +84,19 @@ class FavoriteController extends Controller
     public function destroy($product_id, Request $request)
     {
         $user_id = $request->user()->id;
-        $favorite = Favorite::Where('user_id', $user_id)->first();
+        $favorite = Favorite::where('user_id', $user_id)->first();
 
         if ($favorite) {
-            if (in_array($product_id, json_decode($favorite->products, true ))){
-                $products = json_decode($favorite->products, true);
+            $products = json_decode($favorite->products, true);
 
+            if (is_array($products) && in_array($product_id, $products)) {
                 $deletable_products = array_filter($products, function ($value) use ($product_id) {
                     return $value != $product_id;
                 });
 
                 $favorite->update(['products' => json_encode(array_values($deletable_products))]);
 
-                $this -> deleted_products($product_id, $user_id);
+                $this->deleted_products($product_id, $user_id);
 
                 return response()->json([
                     'message' => 'Product removed from the basket',
@@ -113,14 +115,14 @@ class FavoriteController extends Controller
     public function view(Request $request)
     {
         $user_id = $request->user()->id;
-        $favorite = Favorite::where('user_id', $user_id) -> first();
+
+        $favorite = Favorite::where('user_id', $user_id)->first();
         $products = json_decode($favorite->prodcuts, true) ?? [];
 
         $productDetails= [];
 
         foreach($products as $product_id)
         {
-
             $product = Product::find($product_id);
 
             if ($product)
@@ -136,9 +138,8 @@ class FavoriteController extends Controller
                         'product_price' => $product->price,
                     ];
                 }
-            } else {
-                return response()->json(['products in basket' => array_values($productDetails),'current basket' => $favorite,], 200);
             }
         }
+        return response()->json(['products in basket' => array_values($productDetails),'current basket' => $favorite,], 200);
     }
 }

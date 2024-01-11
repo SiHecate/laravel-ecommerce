@@ -50,10 +50,10 @@ Route::prefix('basket')->group(function () {
     Route::get('/sepet', [BasketController::class, 'view']);
 });
 
-Route::prefix('product')->group(function () {
+Route::prefix('favorite')->group(function () {
     Route::get('/',[FavoriteController::class, 'index']);
     Route::post('/add',[FavoriteController::class, 'store']);
-    Route::put('{id}',[FavoriteController::class, 'update']);
+    // Route::put('{id}',[FavoriteController::class, 'update']);
     Route::delete('{id}',[FavoriteController::class, 'destroy']);
     Route::get('/favoriler',[FavoriteController::class, 'view']);
 });
