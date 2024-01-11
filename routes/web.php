@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BasketController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,14 @@ Route::prefix('basket')->group(function () {
     Route::put('{id}/{type}', [BasketController::class, 'update']);
     Route::delete('{id}', [BasketController::class, 'destroy']);
     Route::get('/sepet', [BasketController::class, 'view']);
+});
+
+Route::prefix('product')->group(function () {
+    Route::get('/',[FavoriteController::class, 'index']);
+    Route::post('/add',[FavoriteController::class, 'store']);
+    Route::put('{id}',[FavoriteController::class, 'update']);
+    Route::delete('{id}',[FavoriteController::class, 'destroy']);
+    Route::get('/favoriler',[FavoriteController::class, 'view']);
 });
 
 Route::get('/token', function () {
