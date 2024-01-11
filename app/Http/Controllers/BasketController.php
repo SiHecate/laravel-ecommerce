@@ -9,14 +9,6 @@ use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
 
 class BasketController extends Controller
 {
-
-    /*
-        ToDo:
-            Her kullanıcının kendisine ait bir Cart'ı olabilir (belongs to)
-            Kullanıcı sepetine ürün eklemek istediğinde kullanıcının id'si ve eklenen ürünün id'si eklenecek
-            bu sayede hangi kullanıcının sepetinde hangi ürünlerin olduğunun verisini alabiliriz
-    */
-
     protected function validationRules()
     {
         return [
@@ -146,22 +138,6 @@ class BasketController extends Controller
             return response()->json(['message' => 'Basket not found', 'user_id' => $user_id], 404);
         }
     }
-
-/*
-m
-            - Adet
-            - Birim fiyat
-            - Toplam tutar
-        Sepet boşsa sepet boş uyarısı
-        Falan filan. xD
-*/
-
-/*
-    ToDo2:
-        Database içerisindeki array'deki her item için bilgi döndürülmesi gerekiyor.
-        Gelen her bilgi front tarafında gösterielecek.
-        İlk ToDov1'i hallet
-*/
 
     public function view(Request $request)
     {
