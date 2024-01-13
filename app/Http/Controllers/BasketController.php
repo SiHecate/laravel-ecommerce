@@ -44,7 +44,7 @@ class BasketController extends Controller
                 'products' => json_encode([$product_id]),
             ]);
         } else {
-            $basketProducts = json_decode($basket->products, true) ?? [];
+            $basketProducts = json_decode($basket->products, true) ?? []; // ?? null coallescing operatör.
             $basketProducts[] = $product_id;
 
             $basket->update([
