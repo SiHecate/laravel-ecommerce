@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressInfoController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ProductController;
@@ -53,9 +54,14 @@ Route::prefix('basket')->group(function () {
 Route::prefix('favorite')->group(function () {
     Route::get('/',[FavoriteController::class, 'index']);
     Route::post('/add',[FavoriteController::class, 'store']);
-    // Route::put('{id}',[FavoriteController::class, 'update']);
+    Route::put('{id}',[FavoriteController::class, 'update']);
     Route::delete('{id}',[FavoriteController::class, 'destroy']);
     Route::get('/favoriler',[FavoriteController::class, 'view']);
+});
+
+Route::prefix('address')->group(function() {
+    Route::Get('/', [AddressInfoController::class, 'index']);
+    Route::Post('/add', [AddressInfoController::class, 'store']);
 });
 
 Route::get('/token', function () {
