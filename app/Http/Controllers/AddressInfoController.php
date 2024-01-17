@@ -66,4 +66,55 @@ class AddressInfoController extends Controller
         }
         return response()->json(['message' => 'New address create succesfully', 'addressInfo' => $addressInfo], 201);
     }
+
+    public function update($address_id, Request $request)
+    {
+        //later
+    }
+
+    public function destroy($address_id, Request $request)
+    {
+        $user_id = $request->user()->id;
+        $addressInfo = AddressInfo::where('user_id', $user_id)->first();
+        $address_id = $addressInfo->id;
+
+        if($address_id){
+            $addresInfo = AddressInfo::findOrFail($address_id);
+            $addresInfo->delete();
+
+            return response()->json(['message' => 'Address deleted succesfully', 'deleted_address' => $addressInfo], 200);
+        } else
+        {
+            return response()->json(['message' => 'Address can not found'], 404);
+        }
+    }
+
+    /*
+        Gösterilecek olan bilgiler:
+            - adres adı
+            - adres sahibi adları
+            - adres sahibi telefon numarası
+            - adres ? ofc
+            - 4	Home2	1	John	Doe	1234567890	Example City	Example County	Example Neighborhood	123 Example Street	2024-01-15 00:46:43	2024-01-15 00:46:43
+    */
+    public function view(Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $addressInfos = AddressInfo::where('user_id', $user_id)->get();
+
+        $addresses = [];
+
+        foreach ($addressInfos as $address) {
+            $addressId = $address->id;
+
+            $addresses[] = [
+                'id' => $addressId,
+                'other_property' => $address->other_property,
+                // Add other properties as needed
+            ];
+        }
+
+        return response()->json(['addresses' => $addresses], 200);
+    }
 }

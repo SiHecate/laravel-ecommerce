@@ -62,6 +62,7 @@ Route::prefix('favorite')->group(function () {
 Route::prefix('address')->group(function() {
     Route::Get('/', [AddressInfoController::class, 'index']);
     Route::Post('/add', [AddressInfoController::class, 'store']);
+    Route::Get('/adresler', [AddressInfoController::class, 'view']);
 });
 
 Route::get('/token', function () {
