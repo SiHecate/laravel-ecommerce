@@ -106,15 +106,18 @@ class AddressInfoController extends Controller
         $addresses = [];
 
         foreach ($addressInfos as $address) {
-            $addressId = $address->id;
-
             $addresses[] = [
-                'id' => $addressId,
-                'other_property' => $address->other_property,
-                // Add other properties as needed
+                'id' => $address->id,
+                'user_id' => $address->user_id,
+                'name' => $address->name,
+                'lastname' => $address->lastname,
+                'telephone' => $address->telephone,
+                'city' => $address->city,
+                'county' => $address->county,
+                'neighborhood' => $address->neighborhood,
+                'full_address' => $address->full_address,
             ];
         }
-
         return response()->json(['addresses' => $addresses], 200);
     }
 }
