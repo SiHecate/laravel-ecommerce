@@ -132,7 +132,7 @@ class BasketController extends Controller
                     'deleted_product_id' => $product_id,
                 ], 200);
             } else {
-                return response()->json(['message' => 'Product not found in basket', 'product_id' => $product_id], 404);
+                return response()->json(['message' => 'Product_not_found_in_basket', 'product_id' => $product_id], 404);
             }
         } else {
             return response()->json(['message' => 'Basket not found', 'user_id' => $user_id], 404);
@@ -148,6 +148,9 @@ class BasketController extends Controller
 
         $productDetails = [];
         $productQuantity = [];
+
+        $basketTotalPrice = $this->basketAmount($user_id);
+
 
         foreach ($products as $product_id)
         {
@@ -177,6 +180,33 @@ class BasketController extends Controller
                 }
             }
         }
-        return response()->json(['products in basket' => array_values($productDetails),'current basket' => $basket, 'product quantitys' => $productQuantity], 200);
+        return response()->json(['products_in_basket' => array_values($productDetails),'current_basket' => $basket, 'total_basket_price' => $basketTotalPrice], 200);
+    }
+
+    public function basketAmount($user_id)
+    {
+        $basket = Basket::where('user_id', $user_id)->first();
+        $products = json_decode($basket->products, true) ?? [];
+
+        $productQuantity = [];
+        $totalPrice = 0;
+
+        foreach($products as $product_id)
+        {
+            $product = Product::find($product_id);
+            $productPrice = $product->price;
+
+            if ($product) {
+                $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
+
+                $productPrice = $product->price;
+
+                $totalPrice += $productPrice * $productQuantity[$product_id];
+            }
+        }
+        return $totalPrice;
     }
 }
+
+
+

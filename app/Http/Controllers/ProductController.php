@@ -25,7 +25,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::pluck('title', 'price', 'id');
+        $products = Product::all();
 
         return response()->json(['products' => $products], 200);
     }
