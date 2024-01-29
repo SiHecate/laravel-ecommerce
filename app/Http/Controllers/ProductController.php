@@ -20,12 +20,9 @@ class ProductController extends Controller
         ];
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::orderBy('created_at', 'asc')->get();
 
         return response()->json(['products' => $products], 200);
     }
@@ -43,9 +40,7 @@ class ProductController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         try {
@@ -65,10 +60,6 @@ class ProductController extends Controller
         }
     }
 
-
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $product = Product::findOrFail($id);
@@ -76,9 +67,7 @@ class ProductController extends Controller
         return response()->json(['product' => $product], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, $id)
     {
         $request->validate($this->validationRules());
@@ -90,14 +79,11 @@ class ProductController extends Controller
         return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
         $product->delete();
-
         return response()->json(['message' => 'Product deleted successfully', 'product' => $product], 200);
     }
 }

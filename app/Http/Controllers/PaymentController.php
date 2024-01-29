@@ -46,6 +46,29 @@ use Illuminate\Http\Request;
     zipcode
     $request->setBuyer($buyer);
 
+    -shipping-
+    contanct name
+    city
+    country
+    address
+    zipcode
+
+    -billing-
+    contanct name
+    city
+    coutry
+    address
+    zipcode
+
+    -basket item-
+    id
+    name
+    category1
+    category2
+    itemtype
+    price
+    $basketItems[0] = $firstBasketItem;
+
 */
 
 class PaymentController extends Controller
