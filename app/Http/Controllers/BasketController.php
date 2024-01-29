@@ -177,6 +177,7 @@ class BasketController extends Controller
                 {
                     $productDetails[$product->id]['product_quantity'] = $productQuantity[$product_id];
                     $productDetails[$product->id]['product_total_price'] += $product->price;
+
                 }
             }
         }
@@ -207,6 +208,3 @@ class BasketController extends Controller
         return $totalPrice;
     }
 }
-
-
-
