@@ -4,22 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AddressInfo;
 use Illuminate\Http\Request;
+use App\Http\Requests\AddressInfoRequest;
 
 class AddressInfoController extends Controller
 {
-    protected function validationRules()
-    {
-        return [
-            'address_name' => ['required', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'telephone' => ['required', 'string', 'max:20'],
-            'city' => ['required', 'string', 'max:255'],
-            'county' => ['required', 'string', 'max:255'],
-            'neighborhood' => ['required', 'string', 'max:255'],
-            'full_address' => ['required', 'string', 'max:255'],
-        ];
-    }
 
     public function index()
     {
@@ -27,18 +15,15 @@ class AddressInfoController extends Controller
         return response()->json(['addressInfo' => $addressInfo], 200);
     }
 
-    public function store(Request $request)
+    public function store(AddressInfoRequest $request)
     {
-        $request->validate($this->validationRules());
         $user = $request->user();
 
-        if ($user)
-        {
-            $user_id = $user->id;
-        } else {
+        if (!$user) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
+        $user_id = $user->id;
         $addressName = $request->input('address_name');
 
         $existingAddress = AddressInfo::where('user_id', $user_id)
@@ -49,23 +34,22 @@ class AddressInfoController extends Controller
             return response()->json(['message' => $addressName . ' already exists for this user.'], 400);
         }
 
-        $addressInfo = AddressInfo::where('user_id', $user_id)->first();
+        $addressInfo = AddressInfo::create([
+            'user_id' => $user_id,
+            'address_name' => $addressName,
+            'name' => $request->input('name'),
+            'lastname' => $request->input('lastname'),
+            'telephone' => $request->input('telephone'),
+            'city' => $request->input('city'),
+            'county' => $request->input('county'),
+            'neighborhood' => $request->input('neighborhood'),
+            'full_address' => $request->input('full_address'),
+        ]);
 
-        if (!$addressInfo) {
-            $addressInfo = AddressInfo::create([
-                'user_id' => $user_id,
-                'address_name' => $addressName,
-                'name' => $request->input('name'),
-                'lastname' => $request->input('lastname'),
-                'telephone' => $request->input('telephone'),
-                'city' => $request->input('city'),
-                'county' => $request->input('county'),
-                'neighborhood' => $request->input('neighborhood'),
-                'full_address' => $request->input('full_address'),
-            ]);
-        }
-        return response()->json(['message' => 'New address create succesfully', 'addressInfo' => $addressInfo], 201);
+        return response()->json(['message' => 'New address created successfully', 'addressInfo' => $addressInfo], 201);
     }
+
+
 
     public function update($address_id, Request $request)
     {

@@ -3,23 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Http\Requests\ProductRequest;
 use Illuminate\Http\Request;
+
 
 class ProductController extends Controller
 {
-    protected function validationRules()
-    {
-        return [
-            'title' => ['required', 'string', 'max:40'],
-            'description' => 'nullable|string',
-            'image' => 'nullable|string',
-            'price' => ['required', 'numeric', 'between:0.01,999999.99'],
-            'stock' => ['required', 'numeric'],
-            'visibility' => 'nullable',
-            'tag' => ['required', 'string', 'max:40'],
-        ];
-    }
-
     public function index()
     {
         $products = Product::orderBy('created_at', 'asc')->get();
@@ -41,11 +30,9 @@ class ProductController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
         try {
-            $request->validate($this->validationRules());
-
             if ($request->stock > 0) {
                 $request->merge(['visibility' => 1]);
             } else {
@@ -68,14 +55,10 @@ class ProductController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        $request->validate($this->validationRules());
-
         $product = Product::findOrFail($id);
-
         $product->update($request->all());
-
         return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
     }
 
