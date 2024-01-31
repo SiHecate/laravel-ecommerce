@@ -142,4 +142,5 @@ class FavoriteController extends Controller
         }
         return response()->json(['products in basket' => array_values($productDetails),'current basket' => $favorite,], 200);
     }
+
 }
