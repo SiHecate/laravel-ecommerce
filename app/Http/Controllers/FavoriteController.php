@@ -2,62 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FavoriteRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Favorite;
 
 class FavoriteController extends Controller
 {
-    protected function validationRules()
-    {
-        return [
-            'product_id' => ['Required','numeric',]
-        ];
-    }
-
     public function index()
     {
         $favorites = Favorite::all();
         return response()->json(['favorite' => $favorites], 200);
     }
 
-    public function store(Request $request)
+    public function store(FavoriteRequest $request)
     {
-        $request->validate($this->validationRules());
-
-        $product_id = $request->input('product_id');
-
         $user = $request->user();
-
         if (!$user) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
         $user_id = $user->id;
+        $product_id = $request->input('product_id');
 
-        $favorite = Favorite::where('user_id', $user_id)->first();
+        $favorite = Favorite::firstOrNew(['user_id' => $user_id]);
+        $favoriteProducts = json_decode($favorite->products, true) ?? [];
+        $favoriteProducts[] = $product_id;
 
-        if (!$favorite) {
-            $favorite = Favorite::create([
-                'user_id' => $user_id,
-                'products' => json_encode([$product_id]),
-            ]);
-        } else {
-            $favoriteProducts = json_decode($favorite->products, true) ?? [];
-            $favoriteProducts[] = $product_id;
-
-            $favorite->update([
-                'products' => json_encode($favoriteProducts),
-            ]);
-        }
+        $favorite->fill(['products' => json_encode($favoriteProducts)])->save();
 
         return response()->json(['message' => 'Product added to basket successfully', 'basket' => $favorite], 201);
     }
 
 
     public function update(Request $request, $product_id, $type){
-        // Favorite page'de ihtiyacı olmadığını düşünüyorum şu an için
-
     }
 
 
@@ -85,19 +63,14 @@ class FavoriteController extends Controller
     {
         $user_id = $request->user()->id;
         $favorite = Favorite::where('user_id', $user_id)->first();
-
         if ($favorite) {
-            $products = json_decode($favorite->products, true);
-
-            if (is_array($products) && in_array($product_id, $products)) {
+            $products = json_decode($favorite->products, true); // favorite içerisindeki product'ları decodelama
+            if (is_array($products) && in_array($product_id, $products)) { // $products array'i içerisinde $product_id'i var mı kontrolü
                 $deletable_products = array_filter($products, function ($value) use ($product_id) {
                     return $value != $product_id;
                 });
-
                 $favorite->update(['products' => json_encode(array_values($deletable_products))]);
-
                 $this->deleted_products($product_id, $user_id);
-
                 return response()->json([
                     'message' => 'Product removed from the basket',
                     'basket' => $favorite,
