@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BasketRequest;
 use App\Models\Basket;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -9,25 +10,14 @@ use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
 
 class BasketController extends Controller
 {
-    protected function validationRules()
-    {
-        return [
-            'product_id' => ['required','numeric',]
-        ];
-    }
-
     public function index()
     {
         $baskets = Basket::all();
         return response()->json(['basket' => $baskets], 200);
     }
 
-    public function store(Request $request)
+    public function store(BasketRequest $request)
     {
-        $request->validate($this->validationRules());
-
-        $product_id = $request->input('product_id');
-
         $user = $request->user();
 
         if ($user) {
@@ -35,6 +25,8 @@ class BasketController extends Controller
         } else {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
+
+        $product_id = $request->input('product_id');
 
         $basket = Basket::where('user_id', $user_id)->first();
 
