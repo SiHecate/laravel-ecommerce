@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BasketRequest;
 use App\Models\Basket;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Service\BasketService;
+use App\Http\Requests\BasketRequest;
 use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
 
 class BasketController extends Controller
 {
+
+    private $basketService;
+
+    public function __construct(BasketService $basketService)
+    {
+        $this->basketService = $basketService;
+    }
+
+
+
     public function index()
     {
         $baskets = Basket::all();
@@ -165,7 +176,7 @@ class BasketController extends Controller
                         'product_total_price' => $product->price * $productQuantity[$product_id],
                     ];
                 }
-                else
+             else
                 {
                     $productDetails[$product->id]['product_quantity'] = $productQuantity[$product_id];
                     $productDetails[$product->id]['product_total_price'] += $product->price;
@@ -178,25 +189,9 @@ class BasketController extends Controller
 
     public function basketAmount($user_id)
     {
-        $basket = Basket::where('user_id', $user_id)->first();
-        $products = json_decode($basket->products, true) ?? [];
+        $products = $this->basketService->getBasket($user_id);
+        $totalPrice = $this->basketService->calculateTotalPrice($products);
 
-        $productQuantity = [];
-        $totalPrice = 0;
-
-        foreach($products as $product_id)
-        {
-            $product = Product::find($product_id);
-            $productPrice = $product->price;
-
-            if ($product) {
-                $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
-
-                $productPrice = $product->price;
-
-                $totalPrice += $productPrice * $productQuantity[$product_id];
-            }
-        }
         return $totalPrice;
     }
 }
