@@ -4,16 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Http\Requests\ProductRequest;
+use App\Http\Service\ProductService;
+use App\Services\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 
 
 class ProductController extends Controller
 {
+
+    protected $productRepository;
+    protected $productService;
+
+
+    public function __construct(ProductRepository $productRepository, ProductService $productService)
+    {
+        $this->productRepository = $productRepository;
+        $this->productService = $productService;
+    }
+
     public function index()
     {
-        $products = Product::orderBy('created_at', 'asc')->get();
-
-        return response()->json(['products' => $products], 200);
+        $this->productService->getProduct();
     }
 
     public function tags()

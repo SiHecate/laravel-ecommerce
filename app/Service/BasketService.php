@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Service;
+namespace App\Service;
 use App\Models\Basket;
-use App\Http\Service\ProductService;
+use App\Service\ProductService;
 
 class BasketService
 {

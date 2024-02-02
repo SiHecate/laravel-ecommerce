@@ -28,8 +28,14 @@ class BasketRepository implements Interface\BasketRepositoryInterface
     {
     }
 
-    public function deleteProduct($basketId, $productId)
+    public function deleteProduct($productId, $userId)
     {
+
+    }
+
+    public function deletedProduct($deletedProductId, $userId)
+    {
+        return Basket::update(['deleted_products' => json_encode($deletedProductId)]);
     }
 
     public function getBasketDetails($basketId)
