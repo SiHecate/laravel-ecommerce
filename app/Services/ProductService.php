@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services;
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductService
@@ -26,7 +28,7 @@ class ProductService
 
     }
 
-    public function getProduct()
+    public function getProduct(): JsonResponse
     {
         $products = $this->productRepository->getAll();
 
@@ -34,7 +36,7 @@ class ProductService
             $allProducts = $products->map(function ($product) {
                 return [
                     'product_id' => $product->id,
-                    'product_name' => $product->name,
+                    'product_title' => $product->title,
                     'product_desc' => $product->description,
                     'product_image' => $product->image,
                     'product_price' => $product->price,
@@ -43,20 +45,70 @@ class ProductService
                 ];
             });
 
-            return $allProducts->toJson();
+            return response()->json([
+                'message' => 'All products in database',
+                'data' => $allProducts,
+            ]);
         }
-        return [];
+        return response()->json([
+            'message' => 'Products not found in database',
+            'data' => [],
+        ]);
     }
 
-    public function findProduct($productId)
+    public function findProduct($productId): JsonResponse
     {
         $product = $this->productRepository->findProductById($productId);
 
         if ($product) {
-            return $product;
+            return response()->json([
+                'message' => "Product $productId",
+                'data' => $product,
+            ]);
         } else {
-            return null;
+            return response()->json([
+                'message' => "Product not found $productId",
+            ]);
         }
+    }
+
+    public function createProduct(array $data): JsonResponse
+    {
+        try {
+            $visibility = $data['stock'] > 0 ? 1 : 0;
+            $data = array_merge($data, ['visibility' => $visibility]);
+
+            $product = Product::create($data);
+
+            return response()->json([
+                'message' => 'Product created successfully',
+                'data' => $product,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Product creation failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function update(array $data, $productId)
+    {
+        $product = Product::findOrFail($productId);
+        $product->update($data);
+        return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
+    }
+
+    public function deleteProduct($productId): JsonResponse
+    {
+        $productId = Product::findOrFail($productId);
+        $productId->delete();
+        $productInfo = $this->findProduct($productId);
+
+        return response()->json([
+            'message' => 'Product removed successfully',
+            'data' => $productInfo,
+        ]);
     }
 
 }
