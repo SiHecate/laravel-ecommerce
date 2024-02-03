@@ -78,7 +78,7 @@ class ProductService
             $visibility = $data['stock'] > 0 ? 1 : 0;
             $data = array_merge($data, ['visibility' => $visibility]);
 
-            $product = Product::create($data);
+            $product = $this->productRepository->createProduct($data);
 
             return response()->json([
                 'message' => 'Product created successfully',
@@ -94,16 +94,14 @@ class ProductService
 
     public function update(array $data, $productId)
     {
-        $product = Product::findOrFail($productId);
-        $product->update($data);
-        return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
+        $this->productRepository->update($data, $productId);
+        return response()->json(['message' => 'Product updated successfully', 'product' => $data], 200);
     }
 
     public function deleteProduct($productId): JsonResponse
     {
-        $productId = Product::findOrFail($productId);
-        $productId->delete();
         $productInfo = $this->findProduct($productId);
+        $this->productRepository->deleteProduct($productId);
 
         return response()->json([
             'message' => 'Product removed successfully',

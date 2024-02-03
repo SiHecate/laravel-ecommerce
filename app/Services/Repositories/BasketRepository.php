@@ -35,7 +35,7 @@ class BasketRepository implements Interfaces\BasketRepositoryInterface
 
     public function deletedProduct($deletedProductId, $userId)
     {
-        return Basket::update(['deleted_products' => json_encode($deletedProductId)]);
+
     }
 
     public function getBasketDetails($basketId)
