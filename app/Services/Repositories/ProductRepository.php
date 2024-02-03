@@ -30,7 +30,6 @@ class ProductRepository implements ProductRepositoryInterface
             $product->update($data);
             return $product;
         }
-
         return null;
     }
 

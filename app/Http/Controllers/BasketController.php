@@ -126,7 +126,7 @@ class BasketController extends Controller
 
                 $basket->update(['products' => json_encode(array_values($deletableProduct))]);
 
-                $this-> deleted_products($product_id, $user_id);
+                $this->deleted_products($product_id, $user_id);
 
                 return response()->json([
                     'message' => 'Product removed from the basket',

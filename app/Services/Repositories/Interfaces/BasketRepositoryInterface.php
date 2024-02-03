@@ -6,7 +6,7 @@ interface BasketRepositoryInterface
 {
     public function getAll();
 
-    public function findByUserId($userId);
+    public function findUserBasket($userId);
 
     public function createBasket(array $data, $userId);
 
@@ -14,7 +14,7 @@ interface BasketRepositoryInterface
 
     public function deleteProduct($userId, $productId);
 
-    public function getBasketDetails($userId);
+    public function deleteBasket($userId);
 
-    public function calculateTotalPrice($userId);
+    public function getBasketDetails($userId);
 }

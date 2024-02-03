@@ -8,41 +8,59 @@ class BasketRepository implements Interfaces\BasketRepositoryInterface
 {
     public function getAll()
     {
-        return Basket::all();
+        return Basket::orderBy('created_at', 'asc')->get();
     }
 
-    public function findByUserId($userId)
+    public function findUserBasket($userId)
     {
-        return Basket::where('user_id', $userId)->first();
+        return Basket::where('user_id', $userId)->get();
     }
 
     public function createBasket(array $data, $userId)
     {
-        return Basket::create([
-            'user_id' => $userId,
-            'products' => $data
-        ]);
+        $existingBasket = $this->findUserBasket($userId);
+
+        if ($existingBasket) {
+            return null;
+        } else {
+            return Basket::create($data);
+        }
     }
 
     public function updateProducts($basketId, $data)
     {
+        $basket = Basket::find($basketId);
+
+        if ($basket) {
+            $basket->update($data);
+            return $basket;
+        } else {
+            return null;
+        }
     }
 
+    // Basket'i tam olarak kaldırma fonksiyonu.
+    public function deleteBasket($userId)
+    {
+        $basket = $this->findUserBasket($userId);
+        $basket->delete();
+    }
+
+    // Basket içerisindeki product'ı kaldırma fonksiyonu
     public function deleteProduct($productId, $userId)
     {
-
+        $basket = $this->findUserBasket($userId);
+        $basket->update(['products' => json_encode(array_values($productId))]);
     }
 
     public function deletedProduct($deletedProductId, $userId)
     {
-
+        $basket = $this->findUserBasket($userId);
+        $basket->update(['deleted_products' => json_encode($deletedProductId)]);
     }
 
     public function getBasketDetails($basketId)
     {
-    }
-
-    public function calculateTotalPrice($basketId)
-    {
+        return Basket::orderBy('created_at', 'asc')->get();
     }
 }
