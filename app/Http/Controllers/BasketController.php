@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Basket;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Http\Service\BasketService;
+use App\Services\BasketService;
 use App\Http\Requests\BasketRequest;
 use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
 

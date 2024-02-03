@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductService
@@ -30,31 +30,32 @@ class ProductService
     {
         $products = $this->productRepository->getAll();
 
-        if ($products)
-        {
-            $allProduct = [
-                'product_id' => $products->id,
-                'product_name' => $products->name,
-                'product_desc' => $products->description,
-                'product_image' => $products->image,
-                'product_price' => $products->price,
-                'product_stock' => $products->stock,
-                'product_creating_time' => $products->created_at,
-            ];
-            return response()->json(['products' => $allProduct], 200);
-        } else {
-            return response()->json(['there is no product in product database'], 404);
+        if ($products->isNotEmpty()) {
+            $allProducts = $products->map(function ($product) {
+                return [
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'product_desc' => $product->description,
+                    'product_image' => $product->image,
+                    'product_price' => $product->price,
+                    'product_stock' => $product->stock,
+                    'product_creating_time' => $product->created_at,
+                ];
+            });
+
+            return $allProducts->toJson();
         }
+        return [];
     }
 
     public function findProduct($productId)
     {
         $product = $this->productRepository->findProductById($productId);
-        if($product)
-        {
-            return response()->json(['product' => $product], 200);
+
+        if ($product) {
+            return $product;
         } else {
-            return response()->json(['message' => "There is no product in the database with ID: $productId"], 404);
+            return null;
         }
     }
 

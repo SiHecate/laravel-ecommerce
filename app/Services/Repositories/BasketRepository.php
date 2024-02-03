@@ -4,7 +4,7 @@ namespace App\Services\Repositories;
 
 use App\Models\Basket;
 
-class BasketRepository implements Interface\BasketRepositoryInterface
+class BasketRepository implements Interfaces\BasketRepositoryInterface
 {
     public function getAll()
     {

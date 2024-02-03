@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
+
 use App\Models\Basket;
-use App\Service\ProductService;
+use App\Services\ProductService;
 
 class BasketService
 {
-    private $productService; // Add a property to hold an instance of ProductService
+    private $productService; // Add a property to hold
 
     public function __construct(ProductService $productService)
     {

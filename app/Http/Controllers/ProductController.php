@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Http\Requests\ProductRequest;
-use App\Http\Service\ProductService;
+use App\Services\ProductService;
 use App\Services\Repositories\ProductRepository;
-use Illuminate\Http\Request;
-
 
 class ProductController extends Controller
 {
@@ -24,8 +22,14 @@ class ProductController extends Controller
 
     public function index()
     {
-        $this->productService->getProduct();
+        $allProducts = $this->productService->getProduct();
+
+        return response()->json([
+            'message' => 'All products in the database',
+            'data' => $allProducts,
+        ], 200);
     }
+
 
     public function tags()
     {
@@ -60,9 +64,12 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = $this->productService->findProduct($id);
 
-        return response()->json(['product' => $product], 200);
+        return response()->json([
+            'message' => "Product $id",
+            'data' => $product,
+        ], $product ? 200 : 404);
     }
 
 

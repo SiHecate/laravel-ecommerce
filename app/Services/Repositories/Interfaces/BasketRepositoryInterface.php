@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Repositories\Interface;
+namespace App\Services\Repositories\Interfaces;
 
 interface BasketRepositoryInterface
 {
