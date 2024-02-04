@@ -56,7 +56,7 @@ class ProductService
         ]);
     }
 
-    public function findProduct($productId): JsonResponse
+    public function viewProduct($productId): JsonResponse
     {
         $product = $this->productRepository->findProductById($productId);
 
@@ -70,6 +70,11 @@ class ProductService
                 'message' => "Product not found $productId",
             ]);
         }
+    }
+
+    public function findProduct($productId)
+    {
+        return $this->productRepository->findProductById($productId);
     }
 
     public function createProduct(array $data): JsonResponse

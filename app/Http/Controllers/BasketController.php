@@ -7,19 +7,19 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\BasketService;
 use App\Http\Requests\BasketRequest;
-use Symfony\Component\HttpKernel\Exception\LengthRequiredHttpException;
+use App\Services\Repositories\BasketRepository;
 
 class BasketController extends Controller
 {
 
-    private $basketService;
+    protected $basketService;
+    protected $basketRepository;
 
-    public function __construct(BasketService $basketService)
+    public function __construct(BasketService $basketService, BasketRepository $basketRepository)
     {
         $this->basketService = $basketService;
+        $this->basketRepository = $basketRepository;
     }
-
-
 
     public function index()
     {
@@ -145,46 +145,9 @@ class BasketController extends Controller
     public function view(Request $request)
     {
         $user_id = $request->user()->id;
+        $basketDetails = $this->basketService->getBasket($user_id);
+        return $basketDetails;
 
-        $basket = Basket::where('user_id', $user_id)->first();
-        $products = json_decode($basket->products, true) ?? [];
-
-        $productDetails = [];
-        $productQuantity = [];
-
-        $basketTotalPrice = $this->basketAmount($user_id);
-
-
-        foreach ($products as $product_id)
-        {
-
-            $product = Product::find($product_id);
-
-            $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
-
-            if ($product)
-            {
-                if (!isset($productDetails[$product->id]))
-                {
-                    $productDetails[$product->id] = [
-                        'product_code' => $product->id,
-                        'product_name' => $product->title,
-                        'product_image' => $product->image,
-                        'product_description' => $product->description,
-                        'product_price' => $product->price,
-                        'product_quantity' => $productQuantity[$product_id],
-                        'product_total_price' => $product->price * $productQuantity[$product_id],
-                    ];
-                }
-             else
-                {
-                    $productDetails[$product->id]['product_quantity'] = $productQuantity[$product_id];
-                    $productDetails[$product->id]['product_total_price'] += $product->price;
-
-                }
-            }
-        }
-        return response()->json(['products_in_basket' => array_values($productDetails),'current_basket' => $basket, 'total_basket_price' => $basketTotalPrice], 200);
     }
 
     public function basketAmount($user_id)

@@ -19,17 +19,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Product Repo and Service
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
-        $this->app->bind(ProductService::class, function ($app) {
-            return new ProductService($app->make(ProductRepositoryInterface::class));
-        });
+        $this->app->bind(ProductService::class, ProductService::class);
 
         // Basket Repo and Service
         $this->app->bind(BasketRepositoryInterface::class, BasketRepository::class);
-        $this->app->bind(BasketService::class, function($app){
-            return new BasketService($app->make(BasketRepositoryInterface::class));
-        });
-
-
+        $this->app->bind(BasketService::class, BasketService::class);
     }
 
     /**
