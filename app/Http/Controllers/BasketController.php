@@ -37,25 +37,10 @@ class BasketController extends Controller
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
-        $product_id = $request->input('product_id');
+        $validatedData = $request->validated();
+        $newBasket = $this->basketService->createBasket($validatedData, $user_id);
 
-        $basket = Basket::where('user_id', $user_id)->first();
-
-        if (!$basket) {
-            $basket = Basket::create([
-                'user_id' => $user_id,
-                'products' => json_encode([$product_id]),
-            ]);
-        } else {
-            $basketProducts = json_decode($basket->products, true) ?? []; // ?? null coallescing operatör.
-            $basketProducts[] = $product_id;
-
-            $basket->update([
-                'products' => json_encode($basketProducts),
-            ]);
-        }
-
-        return response()->json(['message' => 'Product added to basket successfully', 'basket' => $basket], 201);
+        return $newBasket;
     }
 
     public function update(Request $request, $product_id, $type)

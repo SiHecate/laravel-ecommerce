@@ -27,35 +27,51 @@ class BasketService
         foreach ($products as $product_id) {
             $product = $this->productService->findProduct($product_id);
             $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
-
             if ($product) {
                 if (!isset($productDetails[$product->id])) {
                     $productDetails[$product->id] = [
-                        'product_code' => $product->id,
-                        'product_name' => $product->title,
-                        'product_image' => $product->image,
-                        'product_description' => $product->description,
-                        'product_price' => $product->price,
-                        'product_quantity' => $productQuantity[$product_id],
-                        'product_total_price' => $product->price * $productQuantity[$product_id],
+                        'code' => $product->id,
+                        'title' => $product->title,
+                        'image' => $product->image,
+                        'desc' => $product->description,
+                        'price' => $product->price,
+                        'quantity' => $productQuantity[$product_id],
+                        'total_price' => $product->price * $productQuantity[$product_id],
                     ];
                 } else {
-                    $productDetails[$product->id]['product_quantity'] = $productQuantity[$product_id];
-                    $productDetails[$product->id]['product_total_price'] = $product->price * $productQuantity[$product_id];
+                    $productDetails[$product->id]['quantity'] = $productQuantity[$product_id];
+                    $productDetails[$product->id]['total_price'] = $product->price * $productQuantity[$product_id];
                 }
             }
         }
-        return response()->json(['products_in_basket' => array_values($productDetails),'current_basket' => $basket, 'basket_total_price' => $totalPrice], 200);
+        return response()->json(['product_datas' => array_values($productDetails),'basket' => $basket, 'basket_total_price' => $totalPrice], 200);
     }
+
+    public function createBasket(array $data, $userId){
+        $productId = $data['product_id'];
+        $basket = $this->basketRepository->findUserBasket($userId);
+        if (!$basket)
+        {
+            $this->basketRepository->createBasket($data, $userId);
+        } else {
+            $basketProducts = json_decode($basket->products, true) ?? [];
+            $basketProducts[] = $productId;
+            $basket->update([
+                'products' => json_encode($basketProducts),
+            ]);
+        }
+        return response()->json(['message' => 'Product added to basket successfully', 'data' => $basket], 201);
+    }
+
+    public function deleteProduct(array $data, $productId)
+    {}
 
     public function getProductQuantity($products)
     {
         $productQuantity = [];
-
         foreach ($products as $product_id) {
             $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
         }
-
         return $productQuantity;
     }
 
