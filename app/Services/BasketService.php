@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Basket;
+use Illuminate\Support\Arr;
 use App\Services\ProductService;
 use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
 
@@ -47,9 +48,17 @@ class BasketService
         return response()->json(['product_datas' => array_values($productDetails),'basket' => $basket, 'basket_total_price' => $totalPrice], 200);
     }
 
-    public function createBasket(array $data, $userId){
+    public function addProduct(array $data, $userId){
         $productId = $data['product_id'];
         $basket = $this->basketRepository->findUserBasket($userId);
+
+        $product = $this->productService->findProduct($productId);
+
+        if (!$product)
+        {
+            return response()->json(['message' => 'Product not found in database']);
+        }
+
         if (!$basket)
         {
             $this->basketRepository->createBasket($data, $userId);
@@ -63,9 +72,84 @@ class BasketService
         return response()->json(['message' => 'Product added to basket successfully', 'data' => $basket], 201);
     }
 
-    public function deleteProduct(array $data, $productId)
-    {}
 
+
+    public function updateProduct($productId ,$userId, $type)
+    {
+        $basket = $this->basketRepository->findUserBasket($userId);
+
+        if($basket)
+        {
+            $products = json_decode($basket->products, true) ?? [];
+            $product = array_search($productId, $products);
+            if ($product !== false) {
+                if ($type == '+')
+                {
+                    $products[] = $products[$product];
+                }elseif ($type == '-') {
+                    unset($products[$product]);
+                } else {
+                    return response()->json(['message' => 'Wrong type', 'type' => $type], 404);
+                }
+                $basket->update(['products' => json_encode(array_values($products))]);
+                $basket = $this->basketRepository->findUserBasket($userId);
+                return response()->json([
+                    'message' => 'Product quantity updated in the basket',
+                    'basket' => $basket,
+                    'user_id' => $userId,
+                    'updated_product_id' => $productId,
+                    'type' => $type,
+                ], 200);
+            } else {
+                return response()->json(['message' => "Product with ID $productId not found in the basket",'products' => $products], 404);
+            }
+        } else {
+            return response()->json(['message' => 'No products found in the basket']);
+        }
+    }
+
+    public function deletedProduct($productId, $userBasket)
+    {
+        $deletedProducts = json_decode($userBasket->deleted_products, true) ?? [];
+        $existingIndex = array_search($productId, $deletedProducts);
+        if ($existingIndex === false) {
+            $deletedProducts[] = $productId;
+            $userBasket->update(["deleted_products" => json_encode($deletedProducts)]);
+        }
+    }
+
+    public function deleteProduct($productId, $userId)
+    {
+        $basket = $this->basketRepository->findUserBasket($userId);
+
+        if ($basket) {
+            $products = json_decode($basket->products, true);
+
+            if (in_array($productId, $products)) {
+                $updatedProducts = array_values(array_diff($products, [$productId]));
+                $basket->update(['products' => json_encode($updatedProducts)]);
+                $this->deletedProduct($productId, $basket);
+                return response()->json([
+                    'message' => "$productId removed from the basket successfully",
+                    'basket' => $basket,
+                    'user_id' => $userId,
+                    'deleted_product_id' => $productId,
+                ]);
+            } else {
+                return response()->json(['message' => 'Product not found in basket', 'product_id' => $productId], 404);
+            }
+        } else {
+            return response()->json(['message' => 'Basket not found', 'user_id' => $userId], 404);
+        }
+    }
+
+    public function deleteBasket($userId)
+    {
+        $this->basketRepository->deleteBasket($userId);
+    }
+
+
+    // Helpers
     public function getProductQuantity($products)
     {
         $productQuantity = [];

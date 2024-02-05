@@ -85,6 +85,8 @@ class ProductService
 
             $product = $this->productRepository->createProduct($data);
 
+
+
             return response()->json([
                 'message' => 'Product created successfully',
                 'data' => $product,
