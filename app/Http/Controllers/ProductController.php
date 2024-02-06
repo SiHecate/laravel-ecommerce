@@ -20,9 +20,9 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index()
+    public function index(ProductService $productService)
     {
-        $allProducts = $this->productService->getProduct();
+        $allProducts = $productService->getAllProducts();
         return $allProducts;
     }
 
@@ -34,23 +34,23 @@ class ProductController extends Controller
     }
 
 
-    public function show($id)
+    public function show($id, ProductService $productService)
     {
-        $product = $this->productService->findProduct($id);
+        $product = $productService->findProduct($id);
         return $product;
     }
 
 
-    public function update(ProductRequest $request, $id)
+    public function update(ProductRequest $request, $id, ProductService $productService)
     {
         $validatedData = $request->validated();
-        $response =  $this->productService->update($validatedData, $id);
+        $response =  $productService->update($validatedData, $id);
         return $response;
     }
 
-    public function destroy($id)
+    public function destroy($id, ProductService $productService)
     {
-        $product = $this->productService->deleteProduct($id);
+        $product = $productService->deleteProduct($id);
         return $product;
     }
 }

@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Basket;
-use Illuminate\Support\Arr;
 use App\Services\ProductService;
 use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
 

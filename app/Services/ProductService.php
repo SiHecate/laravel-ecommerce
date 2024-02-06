@@ -7,19 +7,6 @@ use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
 
 class ProductService
 {
-    /*
-        Product objects:
-            $table->id();
-            $table->string('title', 40);
-            $table->string('description')->nullable();
-            $table->string('image')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->decimal('stock');
-            $table->boolean('visibility');
-            $table->string('tag', 40);
-            $table->timestamps();
-
-    */
     protected $productRepository;
 
     public function __construct(ProductRepositoryInterface $productRepository)
@@ -28,35 +15,41 @@ class ProductService
 
     }
 
-    public function getProduct(): JsonResponse
+    public function findProduct($productId)
+    {
+        return $this->productRepository->findProductById($productId);
+    }
+
+
+    public function getAllProducts(): JsonResponse
     {
         $products = $this->productRepository->getAll();
 
         if ($products->isNotEmpty()) {
             $allProducts = $products->map(function ($product) {
                 return [
-                    'product_id' => $product->id,
-                    'product_title' => $product->title,
-                    'product_desc' => $product->description,
-                    'product_image' => $product->image,
-                    'product_price' => $product->price,
-                    'product_stock' => $product->stock,
-                    'product_creating_time' => $product->created_at,
+                    'id' => $product->id,
+                    'title' => $product->title,
+                    'desc' => $product->description,
+                    'image' => $product->image,
+                    'price' => $product->price,
+                    'stock' => $product->stock,
+                    'creating_time' => $product->created_at,
                 ];
             });
 
             return response()->json([
-                'message' => 'All products in database',
+                'message' => 'all_products',
                 'data' => $allProducts,
             ]);
         }
         return response()->json([
-            'message' => 'Products not found in database',
+            'message' => 'products not found',
             'data' => [],
         ]);
     }
 
-    public function viewProduct($productId): JsonResponse
+    public function showProduct($productId): JsonResponse
     {
         $product = $this->productRepository->findProductById($productId);
 
@@ -72,11 +65,6 @@ class ProductService
         }
     }
 
-    public function findProduct($productId)
-    {
-        return $this->productRepository->findProductById($productId);
-    }
-
     public function createProduct(array $data): JsonResponse
     {
         try {
@@ -84,8 +72,6 @@ class ProductService
             $data = array_merge($data, ['visibility' => $visibility]);
 
             $product = $this->productRepository->createProduct($data);
-
-
 
             return response()->json([
                 'message' => 'Product created successfully',
@@ -101,8 +87,15 @@ class ProductService
 
     public function update(array $data, $productId)
     {
-        $this->productRepository->update($data, $productId);
-        return response()->json(['message' => 'Product updated successfully', 'product' => $data], 200);
+        try {
+            $this->productRepository->update($data, $productId);
+            return response()->json(['message' => 'Product updated successfully', 'product' => $data], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Product update failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function deleteProduct($productId): JsonResponse
@@ -115,5 +108,4 @@ class ProductService
             'data' => $productInfo,
         ]);
     }
-
 }
