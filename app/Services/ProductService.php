@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services;
-use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
 

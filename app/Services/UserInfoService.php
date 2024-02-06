@@ -70,7 +70,7 @@ class UserInfoService
         }
     }
 
-    public function deleteUserInfo($userId,$addressName): JsonResponse
+    public function deleteUserInfo($addressName, $userId): JsonResponse
     {
         $deletedUserInfo = $this->userInfoRepository->delete($userId, $addressName);
 

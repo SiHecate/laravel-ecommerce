@@ -9,6 +9,9 @@ use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Repositories\ProductRepository;
 use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Services\Repositories\Interfaces\UserInfoRepositoryInterface;
+use App\Services\Repositories\UserInfoRepository;
+use App\Services\UserInfoService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
         // Basket Repo and Service
         $this->app->bind(BasketRepositoryInterface::class, BasketRepository::class);
         $this->app->bind(BasketService::class, BasketService::class);
+
+        $this->app->bind(UserInfoRepositoryInterface::class, UserInfoRepository::class);
+        $this->app->bind(UserInfoService::class, UserInfoService::class);
     }
 
     /**

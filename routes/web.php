@@ -6,6 +6,7 @@ use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AddressInfoController;
+use App\Http\Controllers\UserInfoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,8 +59,16 @@ Route::middleware([LoggerMiddleware::class])->group(function () {
         Route::Get('/adresler', [AddressInfoController::class, 'view']);
     });
 
-    Route::get('/token', function () {
-        return csrf_token();
+    Route::prefix('userInfo')->group(function() {
+        Route::get('/', [UserInfoController::class, 'index']);
+        Route::get('/info', [UserInfoController::class, 'show']);
+        Route::post('/', [UserInfoController::class, 'store']);
+        Route::put('/', [UserInfoController::class, 'update']);
+        Route::delete('/', [UserInfoController::class, 'delete']);
     });
+});
 
+
+Route::get('/token', function () {
+    return csrf_token();
 });
