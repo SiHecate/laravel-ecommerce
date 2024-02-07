@@ -25,22 +25,25 @@ class UserInfoController extends Controller
 
     public function store(UserInfoRequest $request)
     {
-        $userId = $request->user()->id;
+        dd('geldi');
         $validatedData = $request->validate();
+        dd('geldi');
+        $userId = $request->user()->id;
+        dd('geldi');
         return $this->userInfoService->createUserInfo($validatedData, $userId);
     }
 
     public function update(UserInfoRequest $request)
     {
-        $userId = $request->user()->id;
         $validatedData = $request->validated();
+        $userId = $request->user()->id;
         return $this->userInfoService->updateUserInfo($validatedData, $userId);
     }
 
     public function delete(UserInfoRequest $request)
     {
-        $userId = $request->user()->id;
         $validatedData = $request->validated();
+        $userId = $request->user()->id;
         $addressName = $validatedData['address_name'];
         return $this->userInfoService->deleteUserInfo($addressName, $userId);
     }
@@ -50,5 +53,4 @@ class UserInfoController extends Controller
         $userId = $request->user()->id;
         return $this->userInfoService->getUserInfos($userId);
     }
-
 }

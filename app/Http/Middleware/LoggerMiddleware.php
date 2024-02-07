@@ -14,9 +14,6 @@ class LoggerMiddleware
 
         $contents = json_decode($response->getContent(), true, 512);
 
-        $headers  = $request->header();
-
-
         $dt = new Carbon();
         $data = [
             'type '        => 'REQUEST_LOG',

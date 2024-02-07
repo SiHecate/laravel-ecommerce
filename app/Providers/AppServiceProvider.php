@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\BasketService;
+use App\Services\PaymentService;
 use App\Services\ProductService;
 use App\Services\Repositories\BasketRepository;
 use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
@@ -30,6 +31,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(UserInfoRepositoryInterface::class, UserInfoRepository::class);
         $this->app->bind(UserInfoService::class, UserInfoService::class);
+
+        $this->app->bind(PaymentService::class, PaymentService::class);
     }
 
     /**
