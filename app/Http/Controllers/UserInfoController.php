@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use App\Services\UserInfoService;
 use App\Http\Requests\UserInfoRequest;
 use App\Services\Repositories\UserInfoRepository;
-use App\Services\UserInfoService;
 
 class UserInfoController extends Controller
 {
@@ -23,17 +24,21 @@ class UserInfoController extends Controller
         return $allUserInfo;
     }
 
+    public function show(Request $request)
+    {
+        $userId = $request->user()->id;
+        return $this->userInfoService->getUserInfos($userId);
+    }
+
+    // Store Request güncellenecek.
     public function store(UserInfoRequest $request)
     {
-        dd('geldi');
         $validatedData = $request->validate();
-        dd('geldi');
         $userId = $request->user()->id;
-        dd('geldi');
         return $this->userInfoService->createUserInfo($validatedData, $userId);
     }
 
-    public function update(UserInfoRequest $request)
+    public function update(Request $request)
     {
         $validatedData = $request->validated();
         $userId = $request->user()->id;
@@ -46,11 +51,5 @@ class UserInfoController extends Controller
         $userId = $request->user()->id;
         $addressName = $validatedData['address_name'];
         return $this->userInfoService->deleteUserInfo($addressName, $userId);
-    }
-
-    public function show(UserInfoRequest $request)
-    {
-        $userId = $request->user()->id;
-        return $this->userInfoService->getUserInfos($userId);
     }
 }

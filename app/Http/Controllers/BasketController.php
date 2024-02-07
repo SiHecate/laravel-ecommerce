@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Basket;
-use App\Models\Product;
+use App\Models\Basket;;
 use Illuminate\Http\Request;
 use App\Services\BasketService;
 use App\Http\Requests\BasketRequest;
