@@ -23,6 +23,6 @@ class UserInfo extends Model
     ];
 
     protected $casts = [
-        'telephone' => 'integer', // Telefon numarasını integer olarak dönüştür
+        'telephone' => 'integer',
     ];
 }
