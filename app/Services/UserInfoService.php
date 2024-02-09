@@ -21,7 +21,6 @@ class UserInfoService
     public function getUserInfos($userId): JsonResponse
     {
         $userInfos = $this->userInfoRepository->getUserInfos($userId);
-
         if ($userInfos->isNotEmpty()) {
             $formattedUserInfos = $userInfos->map(function ($info) {
                 return [
@@ -51,7 +50,6 @@ class UserInfoService
     public function createUserInfo(array $data, $userId): JsonResponse
     {
         $createdUserInfo = $this->userInfoRepository->create($data, $userId);
-
         if ($createdUserInfo) {
             return response()->json(['message' => 'User info created successfully', 'data' => $createdUserInfo], 201);
         } else {

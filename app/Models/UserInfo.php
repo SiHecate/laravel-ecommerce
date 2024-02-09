@@ -9,20 +9,23 @@ class UserInfo extends Model
 {
     use HasFactory;
 
+    protected $table = 'users_address';
+
     protected $fillable = [
-        'adress_name',
+        'address_name',
         'user_id',
         'name',
-        'surname',
+        'lastname',
         'email',
         'telephone',
         'city',
-        'district',
+        'county',
         'neighborhood',
-        'address',
+        'full_address',
     ];
 
     protected $casts = [
         'telephone' => 'integer',
     ];
+
 }

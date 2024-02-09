@@ -13,17 +13,23 @@ class BasketRepository implements Interfaces\BasketRepositoryInterface
 
     public function findUserBasket($userId)
     {
+
         return Basket::where('user_id', $userId)->first();
     }
 
+    
     public function createBasket(array $data, $userId)
     {
+        // Kullanıcının mevcut sepetini bul
         $existingBasket = $this->findUserBasket($userId);
-
-        if ($existingBasket) {
-            return null;
+    
+        // Eğer kullanıcının sepeti yoksa yeni bir sepet oluştur
+        if ($existingBasket == null) {
+            return Basket::create(array_merge($data, ['user_id' => $userId]));
         } else {
-            return Basket::create($data);
+            // Eğer kullanıcının sepeti varsa, mevcut sepeti güncelle
+            $existingBasket->update($data);
+            return $existingBasket;
         }
     }
 

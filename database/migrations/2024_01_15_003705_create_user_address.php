@@ -11,28 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /*
-            Girilen adresin adı örn:
-                - Bilgenin evi
-                - Umutun evi
-            Kullanıcı bilgileri
-                - İsim
-                - Soyisim
-                - Telefon numarası
-            Adres bilgileri
-                - Şehir
-                - İlçe
-                - Mahalle
-            Tam adres.
-
-        */
-        Schema::create('address_infos', function (Blueprint $table) {
+        Schema::create('users_address', function (Blueprint $table) {
             $table->id();
-            $table->string('address_name'); // JSON olmak yerine string kullanımı
+            $table->string('address_name');
             $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('lastname');
             $table->string('telephone');
+            $table->string('email');
             $table->string('city');
             $table->string('county');
             $table->string('neighborhood');
@@ -40,7 +26,6 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
-
     }
 
     /**

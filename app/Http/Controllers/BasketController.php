@@ -28,16 +28,10 @@ class BasketController extends Controller
 
     public function store(BasketRequest $request)
     {
-        $user = $request->user();
-
-        if ($user) {
-            $user_id = $user->id;
-        } else {
-            return response()->json(['message' => 'User not authenticated'], 401);
-        }
+        $userId = $request->user()->id;
 
         $validatedData = $request->validated();
-        $newBasket = $this->basketService->addProduct($validatedData, $user_id);
+        $newBasket = $this->basketService->addProduct($validatedData, $userId);
 
         return $newBasket;
     }

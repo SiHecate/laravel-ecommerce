@@ -22,16 +22,15 @@ class UserInfoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'adress_name' => ['required', 'string', 'max:255'],
-            'user_id' => ['required', 'integer'],
+            'address_name' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'surname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'telephone' => ['required', 'numeric'],
             'city' => ['required', 'string', 'max:255'],
-            'district' => ['required', 'string', 'max:255'],
+            'county' => ['required', 'string', 'max:255'],
             'neighborhood' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
+            'full_address' => ['required', 'string', 'max:255'],
         ];
     }
 }

@@ -9,7 +9,7 @@ interface UserInfoRepositoryInterface
 
     public function getUserInfos($userId);
 
-    public function create(array $data);
+    public function create(array $data, $userId);
 
     public function update(array $data, $userId);
 

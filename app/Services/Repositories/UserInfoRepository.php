@@ -16,9 +16,10 @@ class UserInfoRepository implements Interfaces\UserInfoRepositoryInterface
         return UserInfo::where('user_id', $userId)->get();
     }
 
-    public function create($data)
+    public function create($data, $userId)
     {
-        return UserInfo::create($data);
+        $data['user_id'] = $userId;
+        return UserInfo::updateOrCreate(['user_id' => $userId], $data);
     }
 
     public function update($data, $userId)
