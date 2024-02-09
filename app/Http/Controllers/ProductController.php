@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Http\Requests\ProductRequest;
 use App\Services\ProductService;
 use App\Services\Repositories\ProductRepository;
@@ -32,7 +31,6 @@ class ProductController extends Controller
         $response = $productService->createProduct($validatedData);
         return $response;
     }
-
 
     public function show($id, ProductService $productService)
     {

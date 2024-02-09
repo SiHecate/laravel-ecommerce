@@ -7,6 +7,7 @@ use App\Services\UserInfoService;
 use App\Http\Requests\UserInfoRequest;
 use App\Services\Repositories\UserInfoRepository;
 
+
 class UserInfoController extends Controller
 {
     protected $userInfoRepository;
@@ -30,12 +31,12 @@ class UserInfoController extends Controller
         return $this->userInfoService->getUserInfos($userId);
     }
 
-    // Store Request güncellenecek.
     public function store(UserInfoRequest $request)
     {
-        $validatedData = $request->validate();
+        $validatedData = $request->validated();
         $userId = $request->user()->id;
-        return $this->userInfoService->createUserInfo($validatedData, $userId);
+        $response = $this->userInfoService->createUserInfo($validatedData, $userId);
+        return $response;
     }
 
     public function update(Request $request)
@@ -45,7 +46,7 @@ class UserInfoController extends Controller
         return $this->userInfoService->updateUserInfo($validatedData, $userId);
     }
 
-    public function delete(UserInfoRequest $request)
+    public function delete(Request $request)
     {
         $validatedData = $request->validated();
         $userId = $request->user()->id;

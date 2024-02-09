@@ -71,7 +71,6 @@ class BasketController extends Controller
     {
         $products = $this->basketService->getBasket($user_id);
         $totalPrice = $this->basketService->calculateTotalPrice($products);
-
         return $totalPrice;
     }
 }
