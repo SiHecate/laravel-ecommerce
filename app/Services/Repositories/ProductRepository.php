@@ -18,7 +18,6 @@ class ProductRepository implements ProductRepositoryInterface
         if (!$product) {
             return null;
         }
-    
         return $product;
     }
 

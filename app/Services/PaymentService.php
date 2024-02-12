@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services;
-use Illuminate\Http\JsonResponse;
 
 class PaymentService
 {
@@ -82,14 +81,6 @@ class PaymentService
         $user_basket = base64_encode(json_encode(array(
             array($data["urun"], $payment_amount, 1)
         )));
-
-
-        foreach($products as $product)
-        {
-
-        }
-
-
 
         #
         /* ÖRNEK $user_basket oluşturma - Ürün adedine göre array'leri çoğaltabilirsiniz

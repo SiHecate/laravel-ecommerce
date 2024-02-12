@@ -13,10 +13,8 @@ class BasketRepository implements Interfaces\BasketRepositoryInterface
 
     public function findUserBasket($userId)
     {
-
         return Basket::where('user_id', $userId)->first();
     }
-
     
     public function createBasket(array $data, $userId)
     {
