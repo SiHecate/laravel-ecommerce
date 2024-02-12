@@ -5,23 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\UserInfoService;
 use App\Http\Requests\UserInfoRequest;
-use App\Services\Repositories\UserInfoRepository;
-
 
 class UserInfoController extends Controller
 {
-    protected $userInfoRepository;
     protected $userInfoService;
 
-    public function __construct(UserInfoRepository $userInfoRepository, UserInfoService $userInfoService)
+    public function __construct(UserInfoService $userInfoService)
     {
-        $this->userInfoRepository = $userInfoRepository;
         $this->userInfoService = $userInfoService;
     }
 
     public function index()
     {
-        $allUserInfo = $this->userInfoService->userInfos();
+        $allUserInfo = $this->userInfoService->getAll();
         return $allUserInfo;
     }
 
@@ -39,7 +35,7 @@ class UserInfoController extends Controller
         return $response;
     }
 
-    public function update(Request $request)
+    public function update(UserInfoRequest $request)
     {
         $validatedData = $request->validated();
         $userId = $request->user()->id;

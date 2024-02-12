@@ -13,7 +13,7 @@ class UserInfoService
         $this->userInfoRepository = $userInfoRepository;
     }
 
-    public function userInfos()
+    public function getAll()
     {
         return $this->userInfoRepository->getAll();
     }

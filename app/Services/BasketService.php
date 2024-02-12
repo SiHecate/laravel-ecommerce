@@ -16,6 +16,11 @@ class BasketService
         $this->basketRepository = $basketRepository;
     }
 
+    public function getAll()
+    {
+        return $this->basketRepository->getAll();
+    }
+
     public function paymentServiceBasket($userId)
     {
         $basket = $this->basketRepository->findUserBasket($userId);
@@ -98,8 +103,6 @@ class BasketService
         return response()->json(['message' => 'Product added to basket successfully', 'data' => $basket], 201);
     }
 
-
-
     public function updateProduct($productId ,$userId, $type)
     {
         $basket = $this->basketRepository->findUserBasket($userId);
@@ -173,7 +176,6 @@ class BasketService
     {
         $this->basketRepository->deleteBasket($userId);
     }
-
 
     // Helpers
     public function getProductQuantity($products)
