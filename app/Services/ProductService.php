@@ -19,9 +19,9 @@ class ProductService
         return $this->productRepository->findProductById($productId);
     }
 
-    public function findProductByName($productName)
+    public function findProductByName($name)
     {
-        return $this->productRepository->findProductsByName($productName);
+        return $this->productRepository->findProductsByName($name);
     }
 
     public function getAllProducts(): JsonResponse

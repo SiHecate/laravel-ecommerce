@@ -5,23 +5,17 @@ use App\Http\Controllers\UserInfoController;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\ProductController;
 
-Route::prefix('user')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/', function () {
-            return auth()->user();
-        });
-
-        Route::get('/id', function () {
-            return auth()->id();
-        });
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', function () {
+        return auth()->user();
     });
 });
 
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
+    Route::post('/search', [ProductController::class, 'search']);
     Route::post('/', [ProductController::class, 'store']);
     Route::get('/{id}', [ProductController::class, 'show']);
-    Route::get('/search', [ProductController::class, 'search']);
     Route::put('/{id}', [ProductController::class, 'update']);
     Route::delete('/{id}', [ProductController::class, 'destroy']);
 });

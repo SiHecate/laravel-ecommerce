@@ -24,7 +24,7 @@ class BasketService
         $productDetails = [];
         $productQuantity = [];
         foreach ($products as $product_id) {
-            $product = $this->productService->findProduct($product_id);
+            $product = $this->productService->findProductById($product_id);
             $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
             if ($product) {
                 $productDetails[$product->id] = [
@@ -52,7 +52,7 @@ class BasketService
         $productDetails = [];
         $productQuantity = [];
         foreach ($products as $product_id) {
-            $product = $this->productService->findProduct($product_id);
+            $product = $this->productService->findProductById($product_id);
             $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
             if ($product) {
                 if (!isset($productDetails[$product->id])) {
@@ -78,7 +78,7 @@ class BasketService
         $productId = $data['product_id'];
         $basket = $this->basketRepository->findUserBasket($userId);
 
-        $product = $this->productService->findProduct($productId);
+        $product = $this->productService->findProductById($productId);
 
         if (!$product)
         {
@@ -189,7 +189,7 @@ class BasketService
     {
         $totalPrice = 0;
         foreach ($products as $product_id) {
-            $product = $this->productService->findProduct($product_id);
+            $product = $this->productService->findProductById($product_id);
             $totalPrice += $product['price'];
         }
         return $totalPrice;

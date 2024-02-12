@@ -4,61 +4,53 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Services\ProductService;
-use App\Services\Repositories\ProductRepository;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-
-    protected $productRepository;
     protected $productService;
 
-
-    public function __construct(ProductRepository $productRepository, ProductService $productService)
+    public function __construct(ProductService $productService)
     {
-        $this->productRepository = $productRepository;
         $this->productService = $productService;
     }
 
-    public function index(ProductService $productService)
+    public function index()
     {
-        $allProducts = $productService->getAllProducts();
+        $allProducts = $this->productService->getAllProducts();
         return $allProducts;
     }
 
-    public function store(ProductRequest $request, ProductService $productService)
+    public function store(ProductRequest $request)
     {
         $validatedData = $request->validated();
-        $response = $productService->createProduct($validatedData);
+        $response = $this->productService->createProduct($validatedData);
         return $response;
     }
 
-    public function show($id, ProductService $productService)
+    public function show($id)
     {
-        $product = $productService->findProductById($id);
+        $product = $this->productService->findProductById($id);
         return $product;
     }
 
-    public function search(Request $request, ProductService $productService)
+    public function search(Request $request)
     {
-        $productName = $request->query('productName');
-        dd($productName);
-        $products = $productService->findProductByName($productName);
+        $name = $request->productName;
+        $products = $this->productService->findProductByName($name);
         return $products;
     }
-    
-    
 
-    public function update(ProductRequest $request, $id, ProductService $productService)
+    public function update(ProductRequest $request, $id)
     {
         $validatedData = $request->validated();
-        $response =  $productService->update($validatedData, $id);
+        $response =  $this->productService->update($validatedData, $id);
         return $response;
     }
 
-    public function destroy($id, ProductService $productService)
+    public function destroy($id)
     {
-        $product = $productService->deleteProduct($id);
+        $product = $this->productService->deleteProduct($id);
         return $product;
     }
 }
