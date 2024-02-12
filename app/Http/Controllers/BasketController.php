@@ -61,6 +61,12 @@ class BasketController extends Controller
 
     }
 
+    public function basket(Request $request)
+    {
+        $userId = $request->user()->id;
+        return $this->basketService->paymentServiceBasket($userId);
+    }
+
     public function basketAmount($user_id)
     {
         $products = $this->basketService->getBasket($user_id);

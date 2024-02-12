@@ -7,10 +7,12 @@ class PaymentService
 {
 
     protected $userInfoService;
+    protected $basketService;
 
-    public function __construct(UserInfoService $userInfoService)
+    public function __construct(UserInfoService $userInfoService, BasketService $basketService)
     {
         $this->userInfoService->$userInfoService;
+        $this->basketService->$basketService;
     }
 
     public function index()
@@ -24,13 +26,22 @@ class PaymentService
         return $randomNumber;
     }
 
+
+    /*
+        Bu methodun içerisine dışarıdan besleme yapmak mı daha mantıklı
+        yoksa içeriden mi besleme yapmak daha mantıklı açıkcası tam çözemedim.
+        Controller içerisinden bunun beslemesini yapılmasının mantıklı olmadığını bildiğim
+        için bu fonksiyonun içeriğini burada doldurup sadece istek atacağım.
+
+        (galiba?)
+    */
     public function payment()
     {
 
         $data =request()->all();
-
-
-        ## 1. ADIM için örnek kodlar ##
+        $userId = auth()->id();
+        $userInfos = $this->userInfoService->getUserInfos($userId);
+        $basketInfos = $this->basketService->getBasket($userId);
 
         ####################### DÜZENLEMESİ ZORUNLU ALANLAR #######################
         #
@@ -41,22 +52,21 @@ class PaymentService
 
         #
         ## Müşterinizin sitenizde kayıtlı veya form vasıtasıyla aldığınız eposta adresi
-        $email = "xxxxxxx";
+        $email = auth()->user()->email;
         #
         ## Tahsil edilecek tutar.
-        $payment_amount = $data["miktar"]*100; //9.99 için 9.99 * 100 = 999 gönderilmelidir.
+        $payment_amount = ($basketInfos->total_price)*100; //9.99 için 9.99 * 100 = 999 gönderilmelidir.
         #
         ## Sipariş numarası: Her işlemde benzersiz olmalıdır!! Bu bilgi bildirim sayfanıza yapılacak bildirimde geri gönderilir.
         $merchant_oid = $this->randomNumberGenerator();
         #
         ## Müşterinizin sitenizde kayıtlı veya form aracılığıyla aldığınız ad ve soyad bilgisi
-        $user_name =$data["adsoyad"];
-        #
+        $user_name = $userInfos->name;
         ## Müşterinizin sitenizde kayıtlı veya form aracılığıyla aldığınız adres bilgisi
-        $user_address = "xxxxxxx";
+        $user_address = $userInfos->address;
         #
         ## Müşterinizin sitenizde kayıtlı veya form aracılığıyla aldığınız telefon bilgisi
-        $user_phone = $data["telefon"];
+        $user_phone = $userInfos->telephone;
         #
         ## Başarılı ödeme sonrası müşterinizin yönlendirileceği sayfa
         ## !!! Bu sayfa siparişi onaylayacağınız sayfa değildir! Yalnızca müşterinizi bilgilendireceğiniz sayfadır!
@@ -72,6 +82,12 @@ class PaymentService
         $user_basket = base64_encode(json_encode(array(
             array($data["urun"], $payment_amount, 1)
         )));
+
+
+        foreach($products as $product)
+        {
+
+        }
 
 
 

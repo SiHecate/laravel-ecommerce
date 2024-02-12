@@ -28,7 +28,6 @@ class UserInfoController extends Controller
     public function show(Request $request)
     {
         $userId = $request->user()->id;
-        
         return $this->userInfoService->getUserInfos($userId);
     }
 

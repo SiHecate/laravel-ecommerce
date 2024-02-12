@@ -16,11 +16,38 @@ class BasketService
         $this->basketRepository = $basketRepository;
     }
 
-    public function getBasket($userId)
+    public function paymentServiceBasket($userId)
     {
         $basket = $this->basketRepository->findUserBasket($userId);
         $products = json_decode($basket->pluck('products')->first(), true) ?? [];
         $totalPrice = $this->calculateTotalPrice($products);
+        $productDetails = [];
+        foreach ($products as $product_id) {
+            $product = $this->productService->findProduct($product_id);
+            $productQuantity[$product_id] = isset($productQuantity[$product_id]) ? $productQuantity[$product_id] + 1 : 1;
+
+            if ($product) {
+                $productDetails[] = [
+                    'title' => $product->title,
+                    'price' => $product->price,
+                    'quantity' => $productQuantity[$product_id],
+                ];
+            }
+        }
+        $user_basket = base64_encode(json_encode($productDetails));
+        return response()->json([
+            'product_datas' => $productDetails,
+            'basket' => $basket,
+            'basket_total_price' => $totalPrice,
+            'user_basket' => $user_basket,
+        ], 200);
+    }
+
+    public function getBasket($userId)
+    {
+        $basket = $this->basketRepository->findUserBasket($userId);
+        $products = json_decode($basket::where('user_id', $userId)->pluck('products'), true) ?? [];
+        $totalPrice = $this->calculateTotalPrice($products);;
         $productDetails = [];
         $productQuantity = [];
         foreach ($products as $product_id) {

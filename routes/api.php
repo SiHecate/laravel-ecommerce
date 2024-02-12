@@ -25,12 +25,13 @@ Route::prefix('products')->group(function () {
     Route::delete('/{id}', [ProductController::class, 'destroy']);
 });
 
-Route::prefix('baskets')->group(function () {
+Route::prefix('basket')->group(function () {
     Route::get('/', [BasketController::class, 'index']);
     Route::post('/', [BasketController::class, 'store']);
     Route::put('/{id}/{type}', [BasketController::class, 'update']);
     Route::delete('/{id}', [BasketController::class, 'destroy']);
     Route::get('/sepet', [BasketController::class, 'view']);
+    Route::get("/paymentBasket", [BasketController::class, 'basket']);
 });
 
 Route::prefix('address')->group(function () {
