@@ -14,11 +14,15 @@ class ProductService
 
     }
 
-    public function findProduct($productId)
+    public function findProductById($productId)
     {
         return $this->productRepository->findProductById($productId);
     }
 
+    public function findProductByName($productName)
+    {
+        return $this->productRepository->findProductsByName($productName);
+    }
 
     public function getAllProducts(): JsonResponse
     {
@@ -99,7 +103,7 @@ class ProductService
 
     public function deleteProduct($productId): JsonResponse
     {
-        $productInfo = $this->findProduct($productId);
+        $productInfo = $this->findProductById($productId);
         $this->productRepository->deleteProduct($productId);
 
         return response()->json([

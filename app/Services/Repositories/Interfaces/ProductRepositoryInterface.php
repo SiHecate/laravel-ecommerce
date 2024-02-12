@@ -7,6 +7,8 @@ interface ProductRepositoryInterface
     public function getAll();
 
     public function findProductById($id);
+    
+    public function findProductsByName($name);
 
     public function createProduct(array $data);
 

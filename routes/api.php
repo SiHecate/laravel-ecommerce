@@ -21,6 +21,7 @@ Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index']);
     Route::post('/', [ProductController::class, 'store']);
     Route::get('/{id}', [ProductController::class, 'show']);
+    Route::get('/search', [ProductController::class, 'search']);
     Route::put('/{id}', [ProductController::class, 'update']);
     Route::delete('/{id}', [ProductController::class, 'destroy']);
 });

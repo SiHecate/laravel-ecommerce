@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Services\ProductService;
 use App\Services\Repositories\ProductRepository;
+use Illuminate\Http\Client\Request;
 
 class ProductController extends Controller
 {
@@ -34,10 +35,19 @@ class ProductController extends Controller
 
     public function show($id, ProductService $productService)
     {
-        $product = $productService->findProduct($id);
+        $product = $productService->findProductById($id);
         return $product;
     }
 
+    public function search(Request $request, ProductService $productService)
+    {
+        $productName = $request->query('productName');
+        dd($productName);
+        $products = $productService->findProductByName($productName);
+        return $products;
+    }
+    
+    
 
     public function update(ProductRequest $request, $id, ProductService $productService)
     {

@@ -21,6 +21,13 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
+    public function findProductsByName($name)
+    {
+        dd($name);
+        $products = Product::where('name', 'like', '%' . $name . '%')->get();
+        return $products;
+    }
+
     public function createProduct(array $data)
     {
         return Product::create($data); 
