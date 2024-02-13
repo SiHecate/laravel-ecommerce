@@ -25,15 +25,6 @@ class PaymentService
         return $randomNumber;
     }
 
-
-    /*
-        Bu methodun içerisine dışarıdan besleme yapmak mı daha mantıklı
-        yoksa içeriden mi besleme yapmak daha mantıklı açıkcası tam çözemedim.
-        Controller içerisinden bunun beslemesini yapılmasının mantıklı olmadığını bildiğim
-        için bu fonksiyonun içeriğini burada doldurup sadece istek atacağım.
-
-        (galiba?)
-    */
     public function payment()
     {
 
@@ -43,41 +34,17 @@ class PaymentService
         $basketInfos = $this->basketService->getBasket($userId);
 
         ####################### DÜZENLEMESİ ZORUNLU ALANLAR #######################
-        #
-        ## API Entegrasyon Bilgileri - Mağaza paneline giriş yaparak BİLGİ sayfasından alabilirsiniz.
         $merchant_id    = 'xxxxxxx';
         $merchant_key   = 'xxxxxxx';
         $merchant_salt  = 'xxxxxxx';
-
-        #
-        ## Müşterinizin sitenizde kayıtlı veya form vasıtasıyla aldığınız eposta adresi
         $email = auth()->user()->email;
-        #
-        ## Tahsil edilecek tutar.
         $payment_amount = ($basketInfos->total_price)*100; //9.99 için 9.99 * 100 = 999 gönderilmelidir.
-        #
-        ## Sipariş numarası: Her işlemde benzersiz olmalıdır!! Bu bilgi bildirim sayfanıza yapılacak bildirimde geri gönderilir.
         $merchant_oid = $this->randomNumberGenerator();
-        #
-        ## Müşterinizin sitenizde kayıtlı veya form aracılığıyla aldığınız ad ve soyad bilgisi
         $user_name = $userInfos->name;
-        ## Müşterinizin sitenizde kayıtlı veya form aracılığıyla aldığınız adres bilgisi
         $user_address = $userInfos->address;
-        #
-        ## Müşterinizin sitenizde kayıtlı veya form aracılığıyla aldığınız telefon bilgisi
         $user_phone = $userInfos->telephone;
-        #
-        ## Başarılı ödeme sonrası müşterinizin yönlendirileceği sayfa
-        ## !!! Bu sayfa siparişi onaylayacağınız sayfa değildir! Yalnızca müşterinizi bilgilendireceğiniz sayfadır!
-        ## !!! Siparişi onaylayacağız sayfa "Bildirim URL" sayfasıdır (Bakınız: 2.ADIM Klasörü).
-        $merchant_ok_url = "xxxxxxx";
-        #
-        ## Ödeme sürecinde beklenmedik bir hata oluşması durumunda müşterinizin yönlendirileceği sayfa
-        ## !!! Bu sayfa siparişi iptal edeceğiniz sayfa değildir! Yalnızca müşterinizi bilgilendireceğiniz sayfadır!
-        ## !!! Siparişi iptal edeceğiniz sayfa "Bildirim URL" sayfasıdır (Bakınız: 2.ADIM Klasörü).
-        $merchant_fail_url = "xxxxxxx";
-        #
-        ## Müşterinin sepet/sipariş içeriği
+        $merchant_ok_url = redirect()->route('success');
+        $merchant_fail_url = redirect()->route('error');
         $user_basket = base64_encode(json_encode(array(
             array($data["urun"], $payment_amount, 1)
         )));
