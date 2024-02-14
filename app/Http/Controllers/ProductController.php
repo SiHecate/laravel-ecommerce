@@ -23,6 +23,7 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
+        dd('deneme');
         $validatedData = $request->validated();
         $response = $this->productService->createProduct($validatedData);
         return $response;
