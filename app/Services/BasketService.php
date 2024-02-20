@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Basket;
 use App\Services\ProductService;
 use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
 
@@ -175,6 +176,11 @@ class BasketService
     public function deleteBasket($userId)
     {
         $this->basketRepository->deleteBasket($userId);
+    }
+
+    public function clearUserBasket($userId)
+    {
+        Basket::where('user_id', $userId)->update(['products' => '']);
     }
 
     // Helpers
