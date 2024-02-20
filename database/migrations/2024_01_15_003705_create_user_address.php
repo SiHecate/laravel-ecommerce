@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users_address', function (Blueprint $table) {
+        Schema::create('user_address', function (Blueprint $table) {
             $table->id();
             $table->string('address_name');
             $table->unsignedBigInteger('user_id');
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('neighborhood');
             $table->string('full_address');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

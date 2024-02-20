@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Cors;
 use App\Http\Middleware\LoggerMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
