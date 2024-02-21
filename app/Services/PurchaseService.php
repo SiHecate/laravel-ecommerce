@@ -63,7 +63,7 @@ class PurchaseService
                     'neighborhood' => $info->neighborhood,
                     'address' => $info->address
                 
-                Buradaki bilgilere giriş yapan kullanıcının id'sinden çektirerek erişilebilir.
+                                Buradaki bilgilere giriş yapan kullanıcının id'sinden çektirerek erişilebilir.
 
             Kullanıcının basket'i boşaltılacak
         */
@@ -110,5 +110,3 @@ class PurchaseService
         return null;
     }
 }
-
-
