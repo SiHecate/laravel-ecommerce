@@ -16,34 +16,6 @@ Route::get('/', function () {
 
 // Routing içerisinde token döndürülmemesi için accept : application-json
 
-/*
-    Admin tarafında kullanılacak olan methodlar
-    - Ürün işlemleri
-        - crud
-    - Kullanıcı bilgileri
-        - show
-        - index
-    - Ödeme işlemleri
-        - kontroller
-    
-    Kullanıcı tarafında kullanılacak olan methodlar (kayıtlı kayıtsız fark etmeksizin)
-    - Ürün işlemleri
-        - index
-        - show
-        - search
-
-    - Sepet işlemleri (kayıtlı kullanıcı)
-        - ürün ekleme çıkarma düzenleme silme (CRUD)
-
-    - Adres bilgileri (kayıtlı kullanıcı)
-        - adres ekleme çıkarma düzenleme silme (CRUD)
-        - 
-
-    Yardım alınacak middleware'lar
-        - Auth
-        - Admin (admin user yaratılacak) 
-        - User ? 
-*/ 
 
 // Product routes
 Route::prefix('product')->group(function () {
@@ -97,5 +69,5 @@ Route::get('/user/profile', function () {
 })->middleware('auth');
 
 Route::get('user/adminCheck', function() {
-    return 'Horray';
+    return 'Admin user';
 })->middleware(AdminCheck::class);
