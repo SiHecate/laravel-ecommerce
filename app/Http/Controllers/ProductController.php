@@ -18,9 +18,7 @@ class ProductController extends Controller
 
     /**
      * @LRDparam username string|max:32
-     * // either space or pipe
-     * @LRDparam nickaname string|nullable|max:32
-     * // override the default response codes
+     * @ nickaname string|nullable|max:32
      * @LRDresponses 200|422
      */
     public function index()
