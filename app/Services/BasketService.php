@@ -35,17 +35,15 @@ class BasketService
             if ($product) {
                 $productDetails[$product->id] = [
                     'title' => $product->title,
+                    'image' => $product->image,
                     'price' => $product->price,
                     'quantity' => $productQuantity[$product_id],
                 ];
             }
         }
-        $user_basket = base64_encode(json_encode($productDetails));
         return response()->json([
             'product_datas' => $productDetails,
-            'basket' => $basket,
             'basket_total_price' => $totalPrice,
-            'user_basket' => $user_basket,
         ], 200);
     }
 

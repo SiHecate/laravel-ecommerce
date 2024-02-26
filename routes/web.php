@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BasketController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserInfoController;
 use App\Http\Middleware\AdminCheck;
@@ -49,6 +50,14 @@ Route::prefix('address')->middleware('auth')->group(function () {
     Route::put('/', [UserInfoController::class, 'update'])->name('address.update');
     Route::get('/info', [UserInfoController::class, 'show'])->name('address.show');
     Route::delete('/{id}', [UserInfoController::class, 'delete'])->name('address.delete');
+});
+
+Route::prefix('payment')->group(function () {
+    Route::get('/', [PaymentController::class, 'index']);
+    Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
+    // Route::get('/success', [ProductController::class, 'success'])->name('checkout.success');
+    // Route::get('/cancel', [ProductController::class, 'cancel'])->name('checkout.cancel');
+    // Route::post('/webhook', [ProductController::class, 'webhook'])->name('checkout.webhook');
 });
 
 // Diğer rotalar
