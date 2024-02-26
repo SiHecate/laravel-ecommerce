@@ -54,18 +54,27 @@ class StripeService{
         return redirect($session->url);
     }
 
-    public function success($request) {
+
+    public function success($request)
+    {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-        $sessionId = $request->get('session_id'); 
+        $sessionId = $request->get('session_id');
+            $session = \Stripe\Checkout\Session::retrieve($sessionId);
+            dd($session);
+            if (!$session) {
+                throw new NotFoundHttpException;
+            }
+            $customer = \Stripe\Customer::retrieve($session->customer);
 
-        $session = \Stripe\Checkout\Session::retrieve($sessionId);
-        if (!$session) {
-            throw new NotFoundHttpException;
-        }
+            $order = Order::where('session_id', $session->id)->first();
+            if (!$order) {
+                throw new NotFoundHttpException();
+            }
+            if ($order->status === 'unpaid') {
+                $order->status = 'paid';
+                $order->save();
+            }
 
-        $customer = \Stripe\Customer::retrieve($session->customer);
-
-        return $customer;
+            return $customer;
     }
-
 }

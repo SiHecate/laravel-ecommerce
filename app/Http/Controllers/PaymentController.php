@@ -21,15 +21,8 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         $userId = $request->user()->id;
-    
-        if (!$userId)
-        {
-            return "Kayıt olun.";
-        }
-    
         $basketData = $this->basketService->paymentServiceBasket($userId);
         $basket = json_decode($basketData->getContent(), true);
-    
         return view('layouts.product.index', compact('basket'));
     }
     
