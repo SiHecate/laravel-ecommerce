@@ -26,13 +26,13 @@ class UserInfoService
                 return [
                     'address_name' => $info->address_name,
                     'name' => $info->name,
-                    'surname' => $info->surname,
+                    'lastname' => $info->lastname,
                     'email' => $info->email,
                     'telephone' => $info->telephone,
                     'city' => $info->city,
-                    'district' => $info->district,
+                    'county' => $info->county,
                     'neighborhood' => $info->neighborhood,
-                    'address' => $info->address
+                    'full_address' => $info->full_address
                 ];
             });
             return response()->json([

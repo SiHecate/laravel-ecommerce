@@ -36,7 +36,8 @@ class PaymentController extends Controller
 
     public function success(Request $request)
     {
-        return $this->stripeService->success($request);   
+        $userId = $request->user()->id;
+        return $this->stripeService->success($userId);   
     }
 
     public function cancel()

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
 use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Services\Repositories\UserInfoRepository;
 use App\Services\BasketService;
@@ -15,17 +14,20 @@ class PurchaseService
     private $productRepository;
     private $basketService;
     private $userInfoRepository;
+    private $userInfoService;
 
     public function __construct
     (
         ProductRepositoryInterface $productRepository,
         BasketService $basketService,
         UserInfoRepository $userInfoRepository,
+        UserInfoService $userInfoService
     )
     {
         $this->productRepository = $productRepository;
-        $this->basketService = $basketService;
         $this->userInfoRepository = $userInfoRepository;
+        $this->basketService = $basketService;
+        $this->userInfoService = $userInfoService;
     }
 
     public function purchase($productId, $purchaseQuantity)
@@ -47,48 +49,16 @@ class PurchaseService
 
     public function success($userId)
     {
-        /*
-            Ürünlerin listesi olacak
-                - Kaç tane alındığı
-                - Toplam ücreti
-                - Saat kaçta alındığı
-                - Hangi adrese alındığı
-                    'address_name' => $info->address_name,
-                    'name' => $info->name,
-                    'surname' => $info->surname,
-                    'email' => $info->email,
-                    'telephone' => $info->telephone,
-                    'city' => $info->city,
-                    'district' => $info->district,
-                    'neighborhood' => $info->neighborhood,
-                    'address' => $info->address
-                
-                                Buradaki bilgilere giriş yapan kullanıcının id'sinden çektirerek erişilebilir.
-
-            Kullanıcının basket'i boşaltılacak
-        */
-
-        $basketData = $this->basketService->getBasket($userId);
-    
+        $basketData = json_decode($this->basketService->getBasket($userId)->getContent(), true);
         if ($basketData && isset($basketData['product_datas'])) {
             $products = $basketData['product_datas'];
             $totalPrice = $basketData['basket_total_price'];
     
-            $userInfo = $this->userInfoRepository->getUserInfos($userId);
+            $userInfo = $this->userInfoService->getUserInfos($userId);
     
             if ($userInfo) {
-                $userInfoArray = [
-                    'name' => $userInfo->name,
-                    'surname' => $userInfo->surname,
-                    'telephone' => $userInfo->telephone,
-                    'city' => $userInfo->city,
-                    'district' => $userInfo->district,
-                    'neighborhood' => $userInfo->neighborhood,
-                    'full_address' => $userInfo->address,
-                ];
-    
                 $response = [
-                    'user_info' => $userInfoArray,
+                    'user_info' => $userInfo,
                     'products' => $products,
                     'total_price' => $totalPrice,
                     'purchase_time' => now(),
@@ -104,6 +74,7 @@ class PurchaseService
             return response()->json(['message' => 'Basket data cannot be found'], 404);
         }
     }
+    
     
 
     public function failure(){

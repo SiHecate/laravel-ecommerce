@@ -7,10 +7,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class StripeService{
 
     private $basketService;
+    private $purchaseService;
 
-    public function __construct(BasketService $basketService)
+    public function __construct(BasketService $basketService, PurchaseService $purchaseService)
     {
         $this->basketService = $basketService;
+        $this->purchaseService = $purchaseService;
     }
 
     
@@ -55,26 +57,24 @@ class StripeService{
     }
 
 
-    public function success($request)
+    /*
+        Kullanıcının:
+         bilgileri gözükecek
+         sepetindeki satın alınmış ürünler gözükecek.
+         toplam ücreti gözükecek.
+         adresi gözükecek. 
+
+
+    */
+    public function success($userId)
     {
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-        $sessionId = $request->get('session_id');
-            $session = \Stripe\Checkout\Session::retrieve($sessionId);
-            dd($session);
-            if (!$session) {
-                throw new NotFoundHttpException;
-            }
-            $customer = \Stripe\Customer::retrieve($session->customer);
+        
+        return $this->purchaseService->success($userId);
 
-            $order = Order::where('session_id', $session->id)->first();
-            if (!$order) {
-                throw new NotFoundHttpException();
-            }
-            if ($order->status === 'unpaid') {
-                $order->status = 'paid';
-                $order->save();
-            }
+    }
 
-            return $customer;
+    public function cancel()
+    {
+
     }
 }
