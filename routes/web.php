@@ -55,8 +55,8 @@ Route::prefix('address')->middleware('auth')->group(function () {
 Route::prefix('payment')->group(function () {
     Route::get('/', [PaymentController::class, 'index']);
     Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
-    // Route::get('/success', [ProductController::class, 'success'])->name('checkout.success');
-    // Route::get('/cancel', [ProductController::class, 'cancel'])->name('checkout.cancel');
+    Route::get('/success', [ProductController::class, 'success'])->name('checkout.success');
+    Route::get('/cancel', [ProductController::class, 'cancel'])->name('checkout.cancel');
     // Route::post('/webhook', [ProductController::class, 'webhook'])->name('checkout.webhook');
 });
 

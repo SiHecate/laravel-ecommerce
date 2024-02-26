@@ -26,7 +26,8 @@ class PaymentController extends Controller
 
     public function checkout(Request $request)
     {
-        $userId = $request->user()->id;
+        // $userId = $request->user()->id;
+        $userId = 1;
         return $this->stripeService->checkout($userId);
     }
 }

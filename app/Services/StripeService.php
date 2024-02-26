@@ -19,30 +19,29 @@ class StripeService{
 
     public function checkout($userId) {
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-        $products = $this->basketService->paymentServiceBasket($userId);
+        $response = $this->basketService->paymentServiceBasket($userId);
+        $products = $response->getData();
         $lineItems = [];
         $totalPrice = 0;
-    
-        foreach($products['product_datas'] as $product) {
-           $lineItems[] = [
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => $product['title'],
-                        'image' => $product['image'],
-                    ],
-                    'unit_amount' => $product['price'] * 100,
-                ],
-                'quantity' => $product['quantity'],
-           ];
-           $totalPrice += $product['price'] * $product['quantity'];
+        
+        foreach($products->product_datas as $product) {
+            $lineItems[] = [
+                 'price_data' => [
+                     'currency' => 'usd',
+                     'product_data' => [
+                         'name' => $product->title,
+                     ],
+                     'unit_amount' => $product->price * 100,
+                 ],
+                 'quantity' => $product->quantity,
+            ];
+            $totalPrice += $product->price * $product->quantity;
         }
-    
         $session = \Stripe\Checkout\Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('checkout.success', [], true),
-            'cancel_url' => route('checkout.cancel', [], true ),
+            'cancel_url' => route('checkout.cancel', [], true),
         ]);
     
         $order = new Order();
@@ -53,5 +52,5 @@ class StripeService{
     
         return redirect($session->url);
     }
-    
+
 }
