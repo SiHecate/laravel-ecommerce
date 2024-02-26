@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Models\Order;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class StripeService{
 
@@ -40,7 +41,7 @@ class StripeService{
         $session = \Stripe\Checkout\Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
-            'success_url' => route('checkout.success', [], true),
+            'success_url' => route('checkout.success', [], true) . "?session_id={CHECKOUT_SESSION_ID}",
             'cancel_url' => route('checkout.cancel', [], true),
         ]);
     
@@ -51,6 +52,20 @@ class StripeService{
         $order->save();
     
         return redirect($session->url);
+    }
+
+    public function success($request) {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $sessionId = $request->get('session_id'); 
+
+        $session = \Stripe\Checkout\Session::retrieve($sessionId);
+        if (!$session) {
+            throw new NotFoundHttpException;
+        }
+
+        $customer = \Stripe\Customer::retrieve($session->customer);
+
+        return $customer;
     }
 
 }

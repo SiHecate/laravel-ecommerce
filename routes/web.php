@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserInfoController;
-use App\Http\Middleware\AdminCheck;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 require __DIR__.'/auth.php';
 
@@ -14,10 +15,6 @@ require __DIR__.'/auth.php';
 Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
-
-// Routing içerisinde token döndürülmemesi için accept : application-json
-
-
 // Product routes
 Route::prefix('product')->group(function () {
 
@@ -32,6 +29,11 @@ Route::prefix('product')->group(function () {
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
     });
 });
+
+// Login and Register routes
+Route::get('/loginPage', [AuthenticatedSessionController::class, 'showLoginForm']);
+Route::get('/registerPage', [AuthenticatedSessionController::class, 'showRegisterForm']);
+
 
 // Basket routes
 Route::prefix('basket')->middleware('auth')->group(function () {
@@ -52,11 +54,12 @@ Route::prefix('address')->middleware('auth')->group(function () {
     Route::delete('/{id}', [UserInfoController::class, 'delete'])->name('address.delete');
 });
 
+// Payment routes
 Route::prefix('payment')->group(function () {
     Route::get('/', [PaymentController::class, 'index']);
     Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
-    Route::get('/success', [ProductController::class, 'success'])->name('checkout.success');
-    Route::get('/cancel', [ProductController::class, 'cancel'])->name('checkout.cancel');
+    Route::get('/success', [PaymentController::class, 'success'])->name('checkout.success');
+    Route::get('/cancel', [PaymentController::class, 'cancel'])->name('checkout.cancel');
     // Route::post('/webhook', [ProductController::class, 'webhook'])->name('checkout.webhook');
 });
 

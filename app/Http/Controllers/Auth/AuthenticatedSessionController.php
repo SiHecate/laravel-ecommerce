@@ -22,6 +22,16 @@ class AuthenticatedSessionController extends Controller
         return response()->noContent();
     }
 
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
+    public function showRegisterForm()
+    {
+        return view('auth.register');
+    }
+
     /**
      * Destroy an authenticated session.
      */
