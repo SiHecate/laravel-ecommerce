@@ -36,8 +36,8 @@ class PurchaseService
     /*
         Bilgiler yollandı CHECK
         Sepet boşaltılacak CHECK
-        Stotkan ürün düşülecek 
-        Siparişler sayfası eklenecek
+        Stotkan ürün düşülecek  CHECK
+        Siparişler sayfası eklenecek 
         Transaction verisi alınacak
     */
     public function success($userId)
@@ -45,10 +45,7 @@ class PurchaseService
         $basketData = json_decode($this->basketService->getBasket($userId)->getContent(), true);
         if ($basketData && isset($basketData['product_datas'])) {
             $products = $basketData['product_datas'];
-            $totalPrice = $basketData['basket_total_price'];
-
-            // dd($products);
-    
+            $totalPrice = $basketData['basket_total_price'];    
             $userInfo = $this->userInfoService->getUserInfos($userId);
     
             if ($userInfo) {
@@ -76,9 +73,7 @@ class PurchaseService
         } else {
             return response()->json(['message' => 'Basket data cannot be found'], 404);
         }
-    }
-    
-    
+    }     
 
     public function failure(){
         return null;
