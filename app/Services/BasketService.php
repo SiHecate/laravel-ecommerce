@@ -178,7 +178,7 @@ class BasketService
 
     public function clearUserBasket($userId)
     {
-        Basket::where('user_id', $userId)->update(['products' => '']);
+        Basket::where('user_id', $userId)->update(['products' => null]);
     }
 
     // Helpers

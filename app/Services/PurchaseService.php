@@ -11,48 +11,43 @@ use App\Services\BasketService;
 */
 class PurchaseService
 {
-    private $productRepository;
     private $basketService;
     private $userInfoRepository;
     private $userInfoService;
+    private $productService;
 
     public function __construct
     (
         ProductRepositoryInterface $productRepository,
         BasketService $basketService,
         UserInfoRepository $userInfoRepository,
-        UserInfoService $userInfoService
+        UserInfoService $userInfoService,
+        ProductService $productService,
     )
     {
-        $this->productRepository = $productRepository;
+        $this->productService = $productService;
         $this->userInfoRepository = $userInfoRepository;
         $this->basketService = $basketService;
         $this->userInfoService = $userInfoService;
     }
 
-    public function purchase($productId, $purchaseQuantity)
-    {
-        $product = $this->productRepository->findProductById($productId);
-    
-        if (!$product) {
-            throw new \Exception("Product not found.");
-        }
-    
-        if ($product->quantity < $purchaseQuantity) {
-            throw new \Exception("Not enough products in stock..");
-        }
-    
-        $newQuantity = $product->quantity - $purchaseQuantity;
-    
-        $this->productRepository->update(['quantity' => $newQuantity], $productId);
-    }
 
+
+    /*
+        Bilgiler yollandı CHECK
+        Sepet boşaltılacak CHECK
+        Stotkan ürün düşülecek 
+        Siparişler sayfası eklenecek
+        Transaction verisi alınacak
+    */
     public function success($userId)
     {
         $basketData = json_decode($this->basketService->getBasket($userId)->getContent(), true);
         if ($basketData && isset($basketData['product_datas'])) {
             $products = $basketData['product_datas'];
             $totalPrice = $basketData['basket_total_price'];
+
+            // dd($products);
     
             $userInfo = $this->userInfoService->getUserInfos($userId);
     
@@ -63,9 +58,17 @@ class PurchaseService
                     'total_price' => $totalPrice,
                     'purchase_time' => now(),
                 ];
-    
+
+
+            foreach($products as $product)
+            {
+                $quantity = $product['quantity'];
+                $productId = $product['code'];
+                $this->productService->stockUpdate($productId, $quantity);
+            }
+
                 $this->basketService->clearUserBasket($userId);
-    
+
                 return response()->json($response, 200);
             } else {
                 return response()->json(['message' => 'User info cannot be found'], 404);
