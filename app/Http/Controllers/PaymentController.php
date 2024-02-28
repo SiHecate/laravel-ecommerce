@@ -17,7 +17,6 @@ class PaymentController extends Controller
         $this->basketService = $basketService;
     }
 
-
     public function index(Request $request)
     {
         $userId = $request->user()->id;
@@ -26,8 +25,6 @@ class PaymentController extends Controller
         return view('layouts.product.index', compact('basket'));
     }
     
-
-
     public function checkout(Request $request)
     {
         $userId = $request->user()->id;

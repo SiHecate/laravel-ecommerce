@@ -38,7 +38,6 @@ class PurchaseService
         Sepet boşaltılacak CHECK
         Stotkan ürün düşülecek  CHECK
         Siparişler sayfası eklenecek 
-        Transaction verisi alınacak
     */
     public function success($userId)
     {
@@ -47,7 +46,6 @@ class PurchaseService
             $products = $basketData['product_datas'];
             $totalPrice = $basketData['basket_total_price'];    
             $userInfo = $this->userInfoService->getUserInfos($userId);
-    
             if ($userInfo) {
                 $response = [
                     'user_info' => $userInfo,
@@ -55,17 +53,13 @@ class PurchaseService
                     'total_price' => $totalPrice,
                     'purchase_time' => now(),
                 ];
-
-
             foreach($products as $product)
             {
                 $quantity = $product['quantity'];
                 $productId = $product['code'];
                 $this->productService->stockReduction($productId, $quantity);
             }
-
                 $this->basketService->clearUserBasket($userId);
-
                 return response()->json($response, 200);
             } else {
                 return response()->json(['message' => 'User info cannot be found'], 404);
