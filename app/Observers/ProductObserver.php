@@ -3,20 +3,49 @@
 namespace App\Observers;
 
 use App\Models\Product;
-use App\Observers\Interfaces\ProductObserver as ProductObserverInterface;
 
-class ProductObserver implements ProductObserverInterface{
+class ProductObserver
+{
+    /**
+     * Handle the Product "created" event.
+     */
+    public function created(Product $product): void
+    {
+        //
+    }
 
-    public function stockUpdated(Product $product) {
-
+    /**
+     * Handle the Product "updated" event.
+     */
+    public function updated(Product $product): void
+    {
         if ($product->stock === 0) {
-          $product->visibility = false;
-          $product->save();
-        }
-
-        if ($product->stock > 0) {
-            $product->visibility = true;
+            $product->visibility = false;
             $product->save();
         }
-      }
+    }
+
+    /**
+     * Handle the Product "deleted" event.
+     */
+    public function deleted(Product $product): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Product "restored" event.
+     */
+    public function restored(Product $product): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Product "force deleted" event.
+     */
+    public function forceDeleted(Product $product): void
+    {
+        //
+    }
 }
