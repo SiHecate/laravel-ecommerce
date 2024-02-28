@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('order_panel', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); 
-            $table->unsignedBigInteger('order_id');
-            $table->
-
+            $table->unsignedBigInteger('total_amount');
             $table->timestamps();
         });
     }
