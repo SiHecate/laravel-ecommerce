@@ -103,8 +103,12 @@ class ProductService
         $product = $this->findProductById($productId);
         $currentQuantity = $product->stock;
         $newQuantity = $currentQuantity - $quantity;
+
+        if ($newQuantity <= 0)
+        {
+            Product::Where('id', $productId)->update(['visibility'], 'False');
+        }
     
-        // Güncelleme işlemi için Eloquent kullanılır ve doğru syntax'a dikkat edilmelidir
         Product::where('id', $productId)->update(['stock' => $newQuantity]);
     }
     
