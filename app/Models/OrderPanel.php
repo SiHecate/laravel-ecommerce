@@ -9,6 +9,7 @@ class OrderPanel extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['order_id' ,'user_id', 'total_amount'];
 
     /**
      * Get the order details for the order panel.

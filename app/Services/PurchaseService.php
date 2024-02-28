@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Services;
-
-use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
-use App\Services\Repositories\UserInfoRepository;
 use App\Services\BasketService;
 
 /*
@@ -12,33 +9,25 @@ use App\Services\BasketService;
 class PurchaseService
 {
     private $basketService;
-    private $userInfoRepository;
     private $userInfoService;
     private $productService;
+    private $orderService;
 
     public function __construct
     (
-        ProductRepositoryInterface $productRepository,
+        
         BasketService $basketService,
-        UserInfoRepository $userInfoRepository,
         UserInfoService $userInfoService,
         ProductService $productService,
+        OrderService $orderService,
     )
     {
         $this->productService = $productService;
-        $this->userInfoRepository = $userInfoRepository;
         $this->basketService = $basketService;
         $this->userInfoService = $userInfoService;
+        $this->orderService = $orderService;
     }
-
-
-
-    /*
-        Bilgiler yollandı CHECK
-        Sepet boşaltılacak CHECK
-        Stotkan ürün düşülecek  CHECK
-        Siparişler sayfası eklenecek 
-    */
+    
     public function success($userId)
     {
         $basketData = json_decode($this->basketService->getBasket($userId)->getContent(), true);
@@ -58,6 +47,7 @@ class PurchaseService
                 $quantity = $product['quantity'];
                 $productId = $product['code'];
                 $this->productService->stockReduction($productId, $quantity);
+                $this->orderService->createOrder($userId, $totalPrice, $productId, $quantity);
             }
                 $this->basketService->clearUserBasket($userId);
                 return response()->json($response, 200);
