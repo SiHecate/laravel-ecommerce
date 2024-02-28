@@ -2,17 +2,19 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
 use App\Services\BasketService;
 use App\Services\PaymentService;
 use App\Services\ProductService;
-use App\Services\Repositories\BasketRepository;
-use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
+use App\Services\UserInfoService;
+use App\Observers\ProductObserver;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Repositories\BasketRepository;
 use App\Services\Repositories\ProductRepository;
+use App\Services\Repositories\UserInfoRepository;
+use App\Services\Repositories\Interfaces\BasketRepositoryInterface;
 use App\Services\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Services\Repositories\Interfaces\UserInfoRepositoryInterface;
-use App\Services\Repositories\UserInfoRepository;
-use App\Services\UserInfoService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Product::observe(ProductObserver::class);
     }
 }
