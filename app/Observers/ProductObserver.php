@@ -19,9 +19,11 @@ class ProductObserver
      */
     public function updated(Product $product): void
     {
-        if ($product->stock === 0) {
-            $product->visibility = false;
-            $product->save();
+        // dd('deneme');
+        if ($product->stock <= 0) {
+            $product->visibility = 0;
+        } elseif ($product->stock >= 1){
+            $product->visibility = 1;
         }
     }
 

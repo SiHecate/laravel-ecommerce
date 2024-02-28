@@ -84,11 +84,13 @@ class BasketService
 
         $product = $this->productService->findProductById($productId);
 
+        if($product->stock <= 0){
+            return response()->json(['message' => 'Product stock is over']);
+        }
         if (!$product)
         {
             return response()->json(['message' => 'Product not found in database']);
         }
-
         if (!$basket)
         {
             $this->basketRepository->createBasket($data, $userId);

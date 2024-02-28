@@ -89,30 +89,6 @@ class ProductService
         }
     }
 
-    public function stockUpdate($productId, $quantity)
-    {
-        /*
-            Id'si gelen Product'ın ve kaç tane alındığının verisi işlenecek.
-            Belirlenen ürünün stock sayısından toplam alınan ürün kadar stok düşürlecek
-            Örneğin
-                A ürününün 100 Stoku olsun
-                A ürününden 5 tane alındı
-                A ürününün Stoku 95 olarak güncellenecek.
-        */
-    
-        $product = $this->findProductById($productId);
-        $currentQuantity = $product->stock;
-        $newQuantity = $currentQuantity - $quantity;
-
-        if ($newQuantity <= 0)
-        {
-            Product::Where('id', $productId)->update(['visibility'], 'False');
-        }
-    
-        Product::where('id', $productId)->update(['stock' => $newQuantity]);
-    }
-    
-
     public function update(array $data, $productId)
     {
         try {
@@ -123,6 +99,36 @@ class ProductService
                 'message' => 'Product update failed',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function stockReduction($productId, $quantity)
+    {
+
+        $product = $this->findProductById($productId);
+        $currentQuantity = $product->stock;
+        $newQuantity = $currentQuantity - $quantity;
+        Product::where('id', $productId)->update(['stock' => $newQuantity]);
+    }
+
+    public function stockUpdate($productId, $quantity)
+    {
+        $product = $this->findProductById($productId);
+        $currentStock = $product->stock;
+        $product->stock = $quantity;
+        if($product->save())
+        {
+            $newStock = $product->stock;
+            return response()->json([
+                'message' => 'Product stock updated successfully',
+                'old_stock' => $currentStock,
+                'new_stock' => $newStock, 
+            ]);
+        } else 
+        {
+            return response()->json([
+                'message' => 'Error!',
+            ]);
         }
     }
 

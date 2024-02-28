@@ -54,6 +54,13 @@ class ProductController extends Controller
         return $response;
     }
 
+    public function stockUpdate(Request $request){
+        $productId = $request->id;
+        $newStock = $request->stock;
+        $response = $this->productService->stockUpdate($productId, $newStock);
+        return $response;
+    }
+
     public function destroy($id)
     {
         $product = $this->productService->deleteProduct($id);

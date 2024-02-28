@@ -61,7 +61,7 @@ class PurchaseService
             {
                 $quantity = $product['quantity'];
                 $productId = $product['code'];
-                $this->productService->stockUpdate($productId, $quantity);
+                $this->productService->stockReduction($productId, $quantity);
             }
 
                 $this->basketService->clearUserBasket($userId);

@@ -24,6 +24,7 @@ Route::prefix('product')->group(function () {
 
     // Admin routes
     Route::middleware(['auth', AdminCheck::class])->group(function () {
+        Route::post('/stockUpdate', [ProductController::class, 'stockUpdate'])->name('product.stockUpdate');
         Route::post('/add', [ProductController::class, 'store'])->name('product.store');
         Route::put('/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
