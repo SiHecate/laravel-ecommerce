@@ -6,9 +6,6 @@ use App\Models\OrderDetail;
 
 class OrderService
 {
-
-    // Construct
-
     private $productService; 
 
     public function __construct(ProductService $productService)
@@ -18,13 +15,17 @@ class OrderService
 
     public function createOrder($userId, $totalPrice, $productId, $productQuantity)
     {
+
+        $order_id = mt_rand(100000, 999999);
+
         $orderPanel = OrderPanel::create([
+            'order_id' => $order_id,
             'user_id' => $userId,
             'total_amount' => $totalPrice,
         ]);
         $product = $this->productService->findProductById($productId);
         $productDetail = [
-            'order_id' => $orderPanel->id,
+            'order_id' => $orderPanel->order_id,
             'order_number' => mt_rand(100000, 999999), 
             'product_name' => $product['title'], 
             'product_image' => $product['image'], 
@@ -34,6 +35,4 @@ class OrderService
         OrderDetail::create($productDetail);
         return true;
     }
-    
-
 }   

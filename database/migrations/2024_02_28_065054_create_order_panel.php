@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_panel', function (Blueprint $table) {
+        Schema::create('order_panels', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('user_id'); 
             $table->unsignedBigInteger('total_amount');
             $table->timestamps();
