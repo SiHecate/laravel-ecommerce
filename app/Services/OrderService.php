@@ -35,4 +35,18 @@ class OrderService
         OrderDetail::create($productDetail);
         return true;
     }
+
+    public function viewOrder()
+    {
+        $orderPanels = OrderPanel::all();
+        $orders = [];
+        foreach ($orderPanels as $orderPanel) {
+            $orderDetails = $orderPanel->orderDetails()->get();
+            $orders[] = [
+                'orderPanel' => $orderPanel,
+                'orderDetails' => $orderDetails,
+            ];
+        }
+        return $orders;
+    }
 }   
