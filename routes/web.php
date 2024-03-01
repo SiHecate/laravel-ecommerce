@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserInfoController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\OrderController;
 
 require __DIR__.'/auth.php';
 
@@ -63,6 +64,11 @@ Route::prefix('payment')->group(function () {
     Route::get('/cancel', [PaymentController::class, 'cancel'])->name('checkout.cancel');
     // Route::post('/webhook', [ProductController::class, 'webhook'])->name('checkout.webhook');
 });
+
+Route::prefix('order')->group( function () {
+    Route::get('/', [OrderController::class, 'index']);
+    Route::get('/userOrder', [OrderController::class, 'viewUserOrder']);
+}); 
 
 // Diğer rotalar
 Route::get('token', function() {

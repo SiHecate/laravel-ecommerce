@@ -49,4 +49,18 @@ class OrderService
         }
         return $orders;
     }
+
+    public function viewUserOrder($userId)
+    {
+        $orderPanels = OrderPanel::where('user_id', $userId)->all();
+        $userOrders = [];
+        foreach ($orderPanels as $orderPanel) {
+            $orderDetails = $orderPanel->orderDetails()->get();
+            $userOrders = [
+                'orderPanel' => $orderPanel,
+                'orderDetails' => $orderDetails,
+            ];
+        }
+        return $userOrders;
+    }
 }   
