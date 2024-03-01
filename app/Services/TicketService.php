@@ -2,58 +2,52 @@
 
 namespace App\Services;
 
-use App\Models\TicketAdmin;
+use App\Models\Inbox;
 use App\Models\TicketUser;
-use Illuminate\Http\Request;
+use App\Models\TicketAdmin;
 
 class TicketService {
 
-    /*
-        - Ticket_id
-        - User_id
-        - Title
-        - Desc
-        - Status
-    */
-    public function createTicket($userId, array $data){
-        $response = [];
+    public function generateTicket($userId, array $data){
         $ticketId = mt_rand(100000, 999999);
-        $response[] = [
+        $ticketData = [
             'user_id' => $userId,
             'ticket_id' => $ticketId,
             'title' => $data['title'],
             'desc' => $data['desc'],            
         ];
-        TicketUser::create($response);
-        $this->createResponse($ticketId);
-
+        TicketUser::create($ticketData);
+        $this->generateResponse($ticketId);
+        return $ticketData;
     }
-
-
-    /*
-        - Response_id
-        - Ticket_id
-        - Response title
-        - Response desc
-    */
-    public function createResponse($ticketId){
-        $response = [];
-        if ($ticketId != 999999) {
-            $responseId = $ticketId + 1;
-        }
-        $response[] = [
+    
+    public function generateResponse($ticketId){
+        $responseId = $ticketId + 1;
+        $responseData = [
             'response_id' => $responseId,
             'ticket_id' => $ticketId,
             'title' => '',
             'desc' => '',
         ];
-        TicketAdmin::create($response);
-
-        return $response;
+        TicketAdmin::create($responseData);
+        return $responseData;
     }
 
-    public function response($responseId)
-    {
-        $response = [];
+    public function generateInbox($response_id, $ticket_id){
+        Inbox::create([
+            'response_id' => $response_id,
+            'ticket_id' => $ticket_id,
+        ]);
+    }
+
+    public function answerResponse($responseId, array $data){
+        TicketAdmin::where('response_id', $responseId)->update([
+            'title' => $data['title'],
+            'desc' => $data['desc'],
+        ]);
+    
+        $ticketId = $responseId - 1;
+        TicketUser::where('ticket_id', $ticketId)->update(['status' => true]);
+        $this->generateInbox($responseId, $ticketId);
     }
 }
