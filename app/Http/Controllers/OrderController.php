@@ -27,4 +27,9 @@ class OrderController extends Controller
 
         return $this->orderService->viewUserOrder($userId);
     }
+
+    public function orderDate()
+    {
+        return $this->orderService->OrderDate();            
+    }
 }

@@ -68,6 +68,7 @@ Route::prefix('payment')->group(function () {
 Route::prefix('order')->group( function () {
     Route::get('/', [OrderController::class, 'index']);
     Route::get('/userOrder', [OrderController::class, 'viewUserOrder']);
+    Route::get('/ordersDate', [OrderController::class, 'orderDate']);
 }); 
 
 // Diğer rotalar

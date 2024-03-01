@@ -50,6 +50,20 @@ class OrderService
         return $orders;
     }
 
+
+    public function orderDate()
+    {
+        $orderDates = [];
+        $orderPanels = OrderPanel::all();
+        foreach ($orderPanels as $orderPanel)
+        {
+            $orderDates[] = $orderPanel->created_at;
+        }
+        return $orderDates; // Tarih dizisini döndür
+    }
+    
+
+
     public function viewUserOrder($userId)
     {
         $orderPanels = OrderPanel::where('user_id', $userId)->all();
@@ -63,4 +77,5 @@ class OrderService
         }
         return $userOrders;
     }
+
 }   
