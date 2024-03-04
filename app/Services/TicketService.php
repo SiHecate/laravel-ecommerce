@@ -45,7 +45,6 @@ class TicketService {
             'title' => $data['title'],
             'desc' => $data['desc'],
         ]);
-    
         $ticketId = $responseId - 1;
         TicketUser::where('ticket_id', $ticketId)->update(['status' => true]);
         $this->generateInbox($responseId, $ticketId);
