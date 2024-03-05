@@ -3,12 +3,13 @@
 use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BasketController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserInfoController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\OrderController;
 
 require __DIR__.'/auth.php';
 
@@ -70,6 +71,12 @@ Route::prefix('order')->group( function () {
     Route::get('/userOrder', [OrderController::class, 'viewUserOrder']);
     Route::get('/ordersDate', [OrderController::class, 'orderDate']);
 }); 
+
+Route::prefix('ticket')->group(function() {
+    Route::post('/ticket', [TicketController::class, 'ticket']);
+    Route::post('/response', [TicketController::class, 'response']);
+    Route::get('/tickets', [TicketController::class, 'viewTickets']);
+});
 
 // Diğer rotalar
 Route::get('token', function() {

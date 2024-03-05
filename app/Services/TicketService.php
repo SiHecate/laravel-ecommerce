@@ -7,9 +7,8 @@ use App\Models\TicketUser;
 use App\Models\TicketAdmin;
 
 class TicketService {
-
-    public function generateTicket($userId, array $data){
-        $ticketId = mt_rand(100000, 999999);
+    public function createTicket($userId, array $data){
+        $ticketId = $this->generateTicketId();
         $ticketData = [
             'user_id' => $userId,
             'ticket_id' => $ticketId,
@@ -19,6 +18,17 @@ class TicketService {
         TicketUser::create($ticketData);
         $this->generateResponse($ticketId);
         return $ticketData;
+    }
+
+    public function respondToTicket(array $data){
+        $responseId = $data['response_id'];
+        TicketAdmin::where('response_id', $responseId)->update([
+            'title' => $data['title'],
+            'desc' => $data['desc'],
+        ]);
+        $ticketId = $responseId - 1;
+        TicketUser::where('ticket_id', $ticketId)->update(['status' => true]);
+        $this->generateInbox($responseId, $ticketId);
     }
     
     public function generateResponse($ticketId){
@@ -40,13 +50,15 @@ class TicketService {
         ]);
     }
 
-    public function answerResponse($responseId, array $data){
-        TicketAdmin::where('response_id', $responseId)->update([
-            'title' => $data['title'],
-            'desc' => $data['desc'],
-        ]);
-        $ticketId = $responseId - 1;
-        TicketUser::where('ticket_id', $ticketId)->update(['status' => true]);
-        $this->generateInbox($responseId, $ticketId);
+    public function viewTickets()
+    {
+        $InboxDatas = Inbox::all();
+        dd($InboxDatas);
+    }
+
+
+    public function generateTicketId(){
+        $ticketId = mt_rand(100000, 999999);
+        return $ticketId;
     }
 }

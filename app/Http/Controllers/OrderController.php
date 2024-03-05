@@ -24,7 +24,6 @@ class OrderController extends Controller
     public function viewUserOrder(Request $request)
     {
         $userId = $request->user()->id;
-
         return $this->orderService->viewUserOrder($userId);
     }
 

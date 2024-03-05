@@ -50,7 +50,6 @@ class OrderService
         return $orders;
     }
 
-
     public function orderDate()
     {
         $orderDates = [];
@@ -59,11 +58,9 @@ class OrderService
         {
             $orderDates[] = $orderPanel->created_at;
         }
-        return $orderDates; // Tarih dizisini döndür
+        return $orderDates;
     }
     
-
-
     public function viewUserOrder($userId)
     {
         $orderPanels = OrderPanel::where('user_id', $userId)->all();

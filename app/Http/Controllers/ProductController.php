@@ -14,13 +14,6 @@ class ProductController extends Controller
     {
         $this->productService = $productService;
     }
-
-
-    /**
-     * @LRDparam username string|max:32
-     * @ nickaname string|nullable|max:32
-     * @LRDresponses 200|422
-     */
     public function index()
     {
         $allProducts = $this->productService->getAllProducts();
