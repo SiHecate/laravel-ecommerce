@@ -16,10 +16,9 @@ class TicketService {
             'desc' => $data['desc'],            
         ];
         TicketUser::create($ticketData);
-        $this->generateResponse($ticketId);
+        $this->generateResponse($ticketId); 
         return $ticketData;
     }
-
     public function respondToTicket(array $data){
         $responseId = $data['response_id'];
         TicketAdmin::where('response_id', $responseId)->update([
@@ -42,7 +41,8 @@ class TicketService {
         TicketAdmin::create($responseData);
         return $responseData;
     }
-
+    
+    
     public function generateInbox($response_id, $ticket_id){
         Inbox::create([
             'response_id' => $response_id,
