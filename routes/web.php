@@ -76,6 +76,7 @@ Route::prefix('ticket')->group(function() {
     Route::post('/ticket', [TicketController::class, 'ticket']);
     Route::post('/response', [TicketController::class, 'response']);
     Route::get('/tickets', [TicketController::class, 'viewTickets']);
+    Route::get('/userTickets', [TicketController::class, 'userTickets']);
 });
 
 // Diğer rotalar

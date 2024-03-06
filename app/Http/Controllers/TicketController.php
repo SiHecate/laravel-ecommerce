@@ -16,14 +16,19 @@ class TicketController extends Controller
 
     public function ticket(TicketRequest $request) {
         $userId = $request->user()->id;
-        $this->ticketService->createTicket($userId, $request->toArray());
+        return $this->ticketService->createTicket($userId, $request->toArray());
     }
 
     public function response(TicketRequest $request) {
-        $this->ticketService->respondToTicket($request->toArray());
+        return $this->ticketService->respondToTicket($request->toArray());
     }
 
     public function viewTickets() {
-        
+        return $this->ticketService->viewAllTickets();
+    }
+
+    public function userTickets(Request $request) {
+        $userId = $request->user()->id;
+        return $this->ticketService->viewUserTickets($userId);
     }
 }
