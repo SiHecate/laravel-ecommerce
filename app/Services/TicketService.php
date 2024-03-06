@@ -82,7 +82,6 @@ class TicketService {
         return response()->json($allTickets);
     }
     
-
     public function viewUserTickets($userId)
     {
         $inbox = Inbox::all();
@@ -112,9 +111,6 @@ class TicketService {
         return response()->json($userTickets);   
     }
     
-    
-
-
     public function generateResponse($ticketId){
         $responseId = $ticketId + 1;
         $responseData = [
