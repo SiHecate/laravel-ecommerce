@@ -110,6 +110,10 @@ class TicketService {
         }
         return response()->json($userTickets);   
     }
+
+    public function viewNonAnsweredTickets(){
+        
+    }
     
     public function generateResponse($ticketId){
         $responseId = $ticketId + 1;
