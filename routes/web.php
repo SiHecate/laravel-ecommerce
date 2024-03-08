@@ -19,11 +19,9 @@ Route::get('/', function () {
 });
 // Product routes
 Route::prefix('product')->group(function () {
-
     Route::get('/', [ProductController::class, 'index'])->name('product.index');
     Route::post('/search', [ProductController::class, 'search'])->name('product.search');
     Route::get('/{id}', [ProductController::class, 'show'])->name('product.show');
-
     // Admin routes
     Route::middleware(['auth', AdminCheck::class])->group(function () {
         Route::post('/stockUpdate', [ProductController::class, 'stockUpdate'])->name('product.stockUpdate');
@@ -63,20 +61,30 @@ Route::prefix('payment')->group(function () {
     Route::post('/checkout', [PaymentController::class, 'checkout'])->name('checkout');
     Route::get('/success', [PaymentController::class, 'success'])->name('checkout.success');
     Route::get('/cancel', [PaymentController::class, 'cancel'])->name('checkout.cancel');
-    // Route::post('/webhook', [ProductController::class, 'webhook'])->name('checkout.webhook');
 });
 
+// Order routes
 Route::prefix('order')->group( function () {
     Route::get('/', [OrderController::class, 'index']);
     Route::get('/userOrder', [OrderController::class, 'viewUserOrder']);
     Route::get('/ordersDate', [OrderController::class, 'orderDate']);
+
+    // Admin routes
+    Route::middleware(['auth', AdminCheck::class])->group(function () {
+        
+    });
 }); 
 
+// Ticket routes
 Route::prefix('ticket')->group(function() {
     Route::post('/ticket', [TicketController::class, 'ticket']);
-    Route::post('/response', [TicketController::class, 'response']);
     Route::get('/tickets', [TicketController::class, 'viewTickets']);
     Route::get('/userTickets', [TicketController::class, 'userTickets']);
+
+    // Admin routes
+    Route::middleware(['auth', AdminCheck::class])->group(function () {
+        Route::post('/response', [TicketController::class, 'response']);
+    });
 });
 
 // Diğer rotalar
@@ -95,7 +103,3 @@ Route::get('/user/profile', function () {
     $user = Auth::user();
     return $user;
 })->middleware('auth');
-
-Route::get('user/adminCheck', function() {
-    return 'Admin user';
-})->middleware(AdminCheck::class);
