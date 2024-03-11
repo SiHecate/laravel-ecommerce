@@ -41,7 +41,7 @@ Uygulama, sürekli olarak geliştirilmeye ve yeni özellikler eklenmeye açık b
     - Kullanıcı Silme: Mevcut kullanıcıların hesaplarını silmelerine olanak tanır.
     - Kullanıcı Bilgileri Yönetimi: Kullanıcılar, profil bilgilerini (adres, iletişim bilgileri vb.) güncelleyebilirler.
 
-4.  **Ticket Sistemi**: Kullanıcılar, destek talepleri oluşturabilir, bu talepleri görüntüleyebilir ve yanıtlarını takip edebilirler.
+4.  **Ticket Sistemi**: Kullanıcılar, destek talepleri oluşturabilir, bu taleplercd i görüntüleyebilir ve yanıtlarını takip edebilirler.
 
     - Destek Talepleri Oluşturma: Kullanıcılar, destek talepleri oluşturabilir.
     - Talepleri Görüntüleme: Kullanıcılar, oluşturdukları destek taleplerini görüntüleyebilir.
